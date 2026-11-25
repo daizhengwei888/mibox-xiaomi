@@ -113,7 +113,7 @@ function renderTopbarSkins() {
 
   box.innerHTML = SKINS.map(
     (s) => `
-    <button type="button" class="skin-chip ${s.id === activeSkin ? 'active' : ''}" data-skin="${s.id}">
+    <button type="button" class="skin-chip ${s.id === activeSkin ? 'active' : ''}" data-skin="${s.id}" title="${escapeHtml(s.name)}" aria-label="主题色：${escapeHtml(s.name)}">
       <span style="width:10px;height:10px;border-radius:50%;background:${s.accent};display:inline-block;"></span>
       <span>${escapeHtml(s.name)}</span>
     </button>

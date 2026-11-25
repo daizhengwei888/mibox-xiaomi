@@ -186,7 +186,14 @@ html[data-mb-layout="wide"] .app-content { padding-bottom: 24px; }
   padding: 8px 16px;
 }
 .topbar-toast { font-size: 13px; color: var(--mb-text-muted); }
-.topbar-skins { display: none; }
+.topbar-skins { display: flex; gap: 4px; }
+.skin-chip {
+  min-height: 32px; width: 32px; padding: 0;
+  justify-content: center; border: 0; background: transparent;
+}
+.skin-chip span:last-child { display: none; }
+.skin-chip span:first-child { width: 14px !important; height: 14px !important; }
+.skin-chip.active { background: var(--mb-bg-muted); border: 0; }
 
 .hero-card { padding: 20px 16px; }
 .hero-title { font-size: 22px; font-weight: 700; line-height: 1.3; }
