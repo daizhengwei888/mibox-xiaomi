@@ -1,11 +1,11 @@
-// 小米浏览器手机 / Pad 双端视口测量与五套高定主题引导（严格遵循 mibrowser-extension-dev SKILL.md §0）
+// 小米浏览器手机 / Pad 双端视口测量与五套高定主题引导
 
 export const SKINS = [
-  { id: 'xiaomi-orange', name: '小米橙·灵动', badge: '参赛主推', accent: '#ff6900', bg: '#fffaf5', dark: false },
-  { id: 'obsidian-dark', name: '曜石黑·OLED', badge: '深邃夜读', accent: '#38bdf8', bg: '#0f141c', dark: true },
-  { id: 'paper-warm', name: '宣纸暖·护眼', badge: '沉浸长读', accent: '#b45309', bg: '#f6f0e4', dark: false },
-  { id: 'ceramic-light', name: '凝脂白·极简', badge: '纯净通透', accent: '#2563eb', bg: '#f8fafc', dark: false },
-  { id: 'aurora-jade', name: '极光翠·琉璃', badge: '先锋科技', accent: '#10b981', bg: '#0b1917', dark: true }
+  { id: 'xiaomi-orange', name: '橙', badge: '默认', accent: '#ff6900', bg: '#fffaf5', dark: false },
+  { id: 'obsidian-dark', name: '黑', badge: '夜间', accent: '#38bdf8', bg: '#0f141c', dark: true },
+  { id: 'paper-warm', name: '米黄', badge: '护眼', accent: '#b45309', bg: '#f6f0e4', dark: false },
+  { id: 'ceramic-light', name: '白', badge: '简洁', accent: '#2563eb', bg: '#f8fafc', dark: false },
+  { id: 'aurora-jade', name: '墨绿', badge: '夜间', accent: '#10b981', bg: '#0b1917', dark: true }
 ];
 
 export const READING_MODES = [
@@ -16,7 +16,7 @@ export const READING_MODES = [
 ];
 
 /**
- * 按照 SKILL.md §0 规范测量当前容器宽度与短边尺寸，绝不用 UA 猜测设备类型
+ * 测量当前容器宽度与短边尺寸，绝不用 UA 猜测设备类型
  */
 export function measureViewport() {
   if (typeof document === 'undefined' || typeof window === 'undefined') {
@@ -94,4 +94,14 @@ export function extractDomain(url) {
   } catch {
     return '本地页面';
   }
+}
+
+// 部分手机浏览器首次打开弹窗时窗口宽度很小，再整体放大铺满屏幕，文字会被放大数倍；
+// 此时把布局宽度固定为屏幕宽度，让浏览器按比例缩放。
+export function ensureMinLayoutWidth(min = 320) {
+  const meta = document.querySelector('meta[name="viewport"]');
+  const width = document.documentElement.clientWidth || window.innerWidth;
+  if (!meta || !width || width >= min) return;
+  const target = Math.min(Math.max(window.screen?.width || 360, min), 480);
+  meta.setAttribute('content', `width=${target}, viewport-fit=cover`);
 }

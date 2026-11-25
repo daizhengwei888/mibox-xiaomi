@@ -3,33 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>谜盒·灵动知识舱</title>
+  <title>谜盒·划词笔记</title>
   <link rel="stylesheet" href="src/shared/theme.css" />
   <link rel="stylesheet" href="popup.css" />
+  <link rel="stylesheet" href="src/shared/glass.css" />
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="mb-glass" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage preserveAspectRatio="none" result="map" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3ClinearGradient id='x'%3E%3Cstop offset='0' stop-color='%23000'/%3E%3Cstop offset='1' stop-color='%23f00'/%3E%3C/linearGradient%3E%3ClinearGradient id='y' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23000'/%3E%3Cstop offset='1' stop-color='%230f0'/%3E%3C/linearGradient%3E%3Crect width='100' height='100' fill='url(%23x)'/%3E%3Crect width='100' height='100' fill='url(%23y)' style='mix-blend-mode:screen'/%3E%3Crect x='12' y='18' width='76' height='64' rx='30' fill='%23808000' style='filter:blur(6px)'/%3E%3C/svg%3E"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="-28" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
   <header class="pop-header">
     <div class="pop-brand">
       <img src="icons/48.png" alt="谜盒" class="pop-logo" />
       <div>
         <div class="pop-title-row">
-          <h1 class="pop-title">谜盒·灵动知识舱</h1>
+          <h1 class="pop-title">谜盒·划词笔记</h1>
           <span class="mb-pill" id="vp-indicator">compact</span>
         </div>
-        <p class="pop-sub" id="current-page-domain">小米浏览器双端智能伴读</p>
+        <p class="pop-sub" id="current-page-domain">划词笔记 · 护眼阅读</p>
       </div>
     </div>
     <div class="pop-head-actions">
-      <button type="button" class="mb-touch-btn soft pop-icon-btn" id="btn-cycle-skin" title="切换五套高定皮肤">🎨</button>
-      <button type="button" class="mb-touch-btn soft pop-icon-btn" id="btn-open-drawer" title="打开伴读抽屉（手机底部抽屉/Pad侧栏）">🗂️</button>
-      <button type="button" class="mb-touch-btn primary pop-icon-btn" id="btn-open-app" title="打开全屏知识舱工作台">⊞</button>
+      <button type="button" class="mb-touch-btn soft pop-icon-btn" id="btn-cycle-skin" title="切换主题色">◐</button>
+      <button type="button" class="mb-touch-btn soft pop-icon-btn" id="btn-open-drawer" title="打开侧边栏">▤</button>
+      <button type="button" class="mb-touch-btn primary pop-icon-btn" id="btn-open-app" title="打开完整页面">↗</button>
     </div>
   </header>
 
   <nav class="pop-tabs" role="tablist">
-    <button type="button" class="pop-tab active" data-tab="page">🔖 当前页 & 护眼</button>
-    <button type="button" class="pop-tab" data-tab="ai">✨ MiMo 速读</button>
-    <button type="button" class="pop-tab" data-tab="quick">🔍 速查 & 闪念</button>
+    <button type="button" class="pop-tab active" data-tab="page">本页</button>
+    <button type="button" class="pop-tab" data-tab="ai">要点</button>
+    <button type="button" class="pop-tab" data-tab="quick">搜索 · 速记</button>
   </nav>
 
   <main class="pop-main">
@@ -39,15 +46,15 @@
         <div class="pop-page-title" id="page-title-display">正在读取当前标签页…</div>
         <div class="pop-page-meta" id="page-meta-display">支持一键智能提炼简介、分类与阅读时长</div>
         <div class="pop-action-grid">
-          <button type="button" class="mb-touch-btn primary" id="btn-collect-page">🔖 收藏当前页</button>
-          <button type="button" class="mb-touch-btn" id="btn-capture-page">📸 截图入笔记</button>
+          <button type="button" class="mb-touch-btn primary" id="btn-collect-page">收藏本页</button>
+          <button type="button" class="mb-touch-btn" id="btn-capture-page">截图入笔记</button>
         </div>
       </div>
 
       <div class="mb-card">
         <div class="pop-sec-head">
-          <span class="pop-sec-title">全局阅读主题（对所有授权网站生效）</span>
-          <span class="mb-pill" id="reading-sync-status">跨标签同步</span>
+          <span class="pop-sec-title">阅读模式</span>
+          <span class="mb-pill" id="reading-sync-status">所有标签页同步</span>
         </div>
         <div class="pop-mode-grid" id="reading-mode-buttons">
           <button type="button" class="mb-touch-btn" data-mode="off">原生</button>
@@ -56,61 +63,61 @@
           <button type="button" class="mb-touch-btn" data-mode="eink">墨水屏</button>
         </div>
         <div class="pop-scale-row">
-          <span>正文字号缩放</span>
+          <span>字号</span>
           <div class="pop-scale-btns" id="font-scale-buttons">
-            <button type="button" class="mb-touch-btn" data-scale="100">标准 100%</button>
-            <button type="button" class="mb-touch-btn" data-scale="115">大字 115%</button>
-            <button type="button" class="mb-touch-btn" data-scale="130">特大 130%</button>
+            <button type="button" class="mb-touch-btn" data-scale="100">标准</button>
+            <button type="button" class="mb-touch-btn" data-scale="115">大</button>
+            <button type="button" class="mb-touch-btn" data-scale="130">特大</button>
           </div>
         </div>
       </div>
 
       <div class="mb-card pop-dnr-row">
         <div>
-          <div class="pop-sec-title">🛡️ DNR 省流净图过滤</div>
-          <div class="pop-sub">拦截授权网页冗余广告路径图片，切换后刷新生效</div>
+          <div class="pop-sec-title">屏蔽广告图片</div>
+          <div class="pop-sub">切换后刷新页面生效</div>
         </div>
         <button type="button" class="mb-touch-btn" id="btn-toggle-dnr">未开启</button>
       </div>
     </section>
 
-    <!-- Tab 2: Xiaomi MiMo + 本地零配置双核 AI 伴读 -->
+    <!-- Tab 2: 本页要点 -->
     <section class="pop-panel" id="tab-ai">
       <div class="mb-card">
         <div class="pop-sec-head">
-          <span class="pop-sec-title">🤖 网页三要点速读 & 划词伴读</span>
-          <span class="mb-pill" id="ai-engine-badge">Xiaomi MiMo + 本地双核</span>
+          <span class="pop-sec-title">本页要点</span>
+          <span class="mb-pill" id="ai-engine-badge">本地模式</span>
         </div>
         <div class="pop-action-grid">
-          <button type="button" class="mb-touch-btn primary" id="btn-ai-summary">✨ 提炼本页三要点</button>
-          <button type="button" class="mb-touch-btn" id="btn-ai-save-note">📝 结果存为笔记</button>
+          <button type="button" class="mb-touch-btn primary" id="btn-ai-summary">提取要点</button>
+          <button type="button" class="mb-touch-btn" id="btn-ai-save-note">存为笔记</button>
         </div>
-        <div class="pop-ai-output" id="ai-output-box">点击「提炼本页三要点」，无需配置 Key 即可由内置引擎立即提炼结构化摘要；配置 Xiaomi MiMo Key 后支持云端流式推理。</div>
+        <div class="pop-ai-output" id="ai-output-box">点「提取要点」，列出这一页的三条要点。不配置 Key 也能用；配置后由大模型生成。</div>
       </div>
     </section>
 
     <!-- Tab 3: 全库检索直答 & 随手闪念笔记 -->
     <section class="pop-panel" id="tab-quick">
       <div class="mb-card">
-        <div class="pop-sec-title" style="margin-bottom:8px;">🧠 全库检索与 `?` 直答</div>
+        <div class="pop-sec-title" style="margin-bottom:8px;">搜索收藏和笔记</div>
         <div class="pop-search-bar">
-          <input type="search" class="mb-input" id="quick-search-input" placeholder="搜收藏/笔记，或输入 ? 提问…" />
-          <button type="button" class="mb-touch-btn primary" id="btn-quick-search">检索</button>
+          <input type="search" class="mb-input" id="quick-search-input" placeholder="关键词，或 ? 开头提问" />
+          <button type="button" class="mb-touch-btn primary" id="btn-quick-search">搜索</button>
         </div>
         <div class="pop-search-results" id="quick-search-results"></div>
       </div>
 
       <div class="mb-card">
-        <div class="pop-sec-title" style="margin-bottom:8px;">✍️ 随手记一条闪念（支持 Markdown）</div>
-        <textarea class="mb-textarea" id="quick-note-text" placeholder="记录当前阅读灵感，自动关联当前网页来源…"></textarea>
-        <button type="button" class="mb-touch-btn primary" id="btn-save-quick-note" style="width:100%;margin-top:8px;">保存至谜盒笔记</button>
+        <div class="pop-sec-title" style="margin-bottom:8px;">随手记一条</div>
+        <textarea class="mb-textarea" id="quick-note-text" placeholder="会自动带上当前网页链接"></textarea>
+        <button type="button" class="mb-touch-btn primary" id="btn-save-quick-note" style="width:100%;margin-top:8px;">保存</button>
       </div>
     </section>
   </main>
 
   <footer class="pop-footer">
     <span id="pop-status-bar">已就绪 · 收藏 <b id="stat-bm-count">0</b> · 笔记 <b id="stat-note-count">0</b></span>
-    <button type="button" class="pop-link-btn" id="btn-footer-workspace">进入全屏知识舱 →</button>
+    <button type="button" class="pop-link-btn" id="btn-footer-workspace">打开完整页面 →</button>
   </footer>
 
   <script type="module" src="popup.js"></script>

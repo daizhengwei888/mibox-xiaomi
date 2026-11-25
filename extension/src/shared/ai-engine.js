@@ -1,10 +1,10 @@
-// 谜盒·小米版 AI 双核引擎：Xiaomi MiMo 首席预置 SSE 流式网关 + 零配置本地智能提取引擎
+// 谜盒 AI 调用：OpenAI 兼容接口 SSE 流式请求，未配置 Key 时回退到本地规则提取引擎
 // 确保评委与用户在小米浏览器导入 ZIP 后，无需配置 API Key 即可开箱体验全部智能能力；配置 Key 后自动切换真 SSE 流式生成。
 
 export const AI_PRESETS = [
   {
     id: 'xiaomi-mimo',
-    name: 'Xiaomi MiMo（小米大模型 · 推荐）',
+    name: 'Xiaomi MiMo',
     protocol: 'openai',
     baseUrl: 'https://api.mimo.mi.com/v1',
     model: 'mimo-v2.6',
@@ -141,7 +141,7 @@ export function runOfflinePageAnalysis({ mode = 'summary', title = '', url = '',
   if (mode === 'selection-explain') {
     const snippet = selection || sourceText.slice(0, 240);
     return [
-      `### ✨ 划词精读与语境拆解`,
+      `### 划词精读与语境拆解`,
       `- **核心语义**：${intel.brief}`,
       `- **关键片段**：「${snippet.slice(0, 120)}${snippet.length > 120 ? '…' : ''}」`,
       `- **分类标签**：${intel.tags.map((t) => `\`#${t}\``).join(' ')}`,
@@ -154,12 +154,12 @@ export function runOfflinePageAnalysis({ mode = 'summary', title = '', url = '',
     const hasChinese = /[\u4e00-\u9fa5]/.test(snippet);
     const terms = (snippet.match(/[A-Za-z][A-Za-z0-9_-]{2,}|[\u4e00-\u9fa5]{2,6}/g) || []).slice(0, 5);
     return [
-      `### 🌐 双语对照与术语解析`,
+      `### 双语对照与术语解析`,
       `- **原文摘录**：${snippet.slice(0, 160)}${snippet.length > 160 ? '…' : ''}`,
       `- **语种识别**：${hasChinese ? '中文语段 → 提炼英文检索关键词与专业释义' : '外文语段 → 提炼中文核心大意与术语对照'}`,
       `- **核心大意**：${intel.brief}`,
       `- **高频术语**：${terms.length ? terms.map((t) => `\`${t}\``).join(' · ') : '`核心概念`'}`,
-      `> 💡 提示：在设置中填入 **Xiaomi MiMo** 或 DeepSeek API Key 后，可开启逐句流式神经机器翻译。`
+      `> 提示：当前是本地模式，只做术语对照；在设置里填入 API Key 后可以整句翻译。`
     ].join('\n');
   }
 
@@ -168,7 +168,7 @@ export function runOfflinePageAnalysis({ mode = 'summary', title = '', url = '',
     : `1. ${intel.brief}\n2. 页面归属分类「${intel.group}」，包含 ${intel.tags.join('、')} 等核心主题。\n3. 建议开启谜盒「暖纸护眼」或「深色夜读」模式进行沉浸阅读。`;
 
   return [
-    `### 📌 《${title || '当前网页'}》核心速读`,
+    `### 《${title || '当前网页'}》核心速读`,
     `**阅读预估**：约 ${readingMinutes} 分钟（${charCount} 字） · **分类**：\`${intel.group}\` ${intel.tags.map((t) => `\`#${t}\``).join(' ')}`,
     ``,
     `**核心要点提炼：**`,
@@ -242,14 +242,14 @@ export function answerFromKnowledgeBase(query, { bookmarks = [], notes = [] }) {
   }
 
   const summaryLines = top.map((item, idx) => {
-    const badge = item.type === 'note' ? '📝 笔记' : '🔖 收藏';
+    const badge = item.type === 'note' ? '笔记' : '收藏';
     const snippet = item.content.replace(/\s+/g, ' ').trim().slice(0, 110);
     return `${idx + 1}. **[${badge}] ${item.title}**：${snippet}${snippet.length >= 110 ? '…' : ''}`;
   });
 
   return {
     answer: [
-      `### 🧠 谜盒全库检索直答：「${cleanQ}」`,
+      `### 谜盒全库检索直答：「${cleanQ}」`,
       `已从你的私有收藏与笔记库中召回 **${top.length}** 条高相关证据：`,
       ``,
       ...summaryLines
@@ -282,7 +282,7 @@ export async function runSmartAiTask({
     } else if (taskMode === 'polish-note') {
       const intel = inferBookmarkIntelligence({ title: pageContext.title || '笔记', text: prompt });
       resultText = [
-        `### ✨ AI 结构化润色与待办提炼`,
+        `### AI 结构化润色与待办提炼`,
         `> **核心摘要**：${intel.brief}`,
         ``,
         prompt
@@ -317,14 +317,14 @@ export async function runSmartAiTask({
     return {
       ok: true,
       engine: 'local-zero-config',
-      model: '谜盒本地智能引擎（可配置 Xiaomi MiMo Key 开启云端大模型）',
+      model: '本地模式',
       text: resultText
     };
   }
 
   // 构建云端大模型 System & User Prompt
   const systemPrompt =
-    '你是「谜盒·灵动知识舱」（小米浏览器扩展程序）内置的 AI 知识伴读助手，优先使用精炼、结构化的中文 Markdown 输出，直接给出要点结论，不寒暄。';
+    '你是「谜盒·划词笔记」（小米浏览器扩展程序）内置的 AI 知识伴读助手，优先使用精炼、结构化的中文 Markdown 输出，直接给出要点结论，不寒暄。';
   const userMessage =
     prompt ||
     `请针对以下网页内容执行【${taskMode}】任务：\n标题：${pageContext.title || ''}\n网址：${pageContext.url || ''}\n选中文本：${pageContext.selection || ''}\n正文摘录：${String(pageContext.text || '').slice(0, 4000)}`;
@@ -421,7 +421,7 @@ export async function runSmartAiTask({
       text: pageContext.text,
       selection: pageContext.selection || prompt
     });
-    const combined = `${fallbackText}\n\n> ⚠️ 云端接口（${model}）连接受限（${err.message}），已自动由谜盒本地智能引擎完成分析。`;
+    const combined = `${fallbackText}\n\n> 云端接口（${model}）连接受限（${err.message}），已自动由谜盒本地智能引擎完成分析。`;
     if (typeof onChunk === 'function') onChunk(combined, true);
     return { ok: true, engine: 'fallback-local', model, text: combined };
   }

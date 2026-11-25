@@ -1,6 +1,5 @@
-// 谜盒·灵动知识舱 后台服务进程（Manifest V3 Service Worker）
-// 严格遵守小米浏览器 mibrowser-extension-dev SKILL.md 规范：
-// 1. 不在 Service Worker 中访问 window / document / screen
+// 谜盒·划词笔记 后台服务进程（Manifest V3 Service Worker）
+// // 1. 不在 Service Worker 中访问 window / document / screen
 // 2. 不调用 bookmarks / history / contextMenus / omnibox / identity / proxy / tabs.remove 等禁用接口
 // 3. 异步消息统一使用 sendResponse + return true，状态持久化至 chrome.storage.local
 
@@ -36,7 +35,7 @@ import {
 const VAULT_ALARM_NAME = 'mb-vault-autolock';
 
 /**
- * 更新当前活动标签页的扩展图标角标（仅调用 SKILL.md §2 允许的 action.setBadgeText）
+ * 更新当前活动标签页的扩展图标角标
  */
 async function refreshBadgeForTab(tabId, url) {
   if (!chrome.action?.setBadgeText) return;
@@ -61,7 +60,7 @@ async function refreshBadgeForTab(tabId, url) {
 }
 
 /**
- * 配置 declarativeNetRequest 动态净网规则（严格遵循 SKILL.md §2 & references/examples.md §6）
+ * 配置 declarativeNetRequest 动态净网规则
  */
 async function applyDnrPurifierRules(dnrConfig) {
   if (!chrome.declarativeNetRequest?.updateDynamicRules) {
@@ -119,7 +118,7 @@ async function applyDnrPurifierRules(dnrConfig) {
 }
 
 /**
- * 保险箱会话状态读写（避免仅依赖 Service Worker 内存状态，遵循 SKILL.md §2 alarms 规范）
+ * 保险箱会话状态读写
  */
 async function getActiveVaultMasterKey() {
   const map = await getStorageMap([STORAGE_KEYS.VAULT_SESSION]);
@@ -240,7 +239,7 @@ async function runXiaomiCapabilitySelfCheck() {
   ];
   return {
     ok: true,
-    version: chrome.runtime?.getManifest?.()?.version || '1.0.0',
+    version: chrome.runtime?.getManifest?.()?.version || '1.1.1',
     checks
   };
 }
@@ -386,7 +385,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             format: 'jpeg',
             quality: 75
           });
-          const title = `📸 网页可见区截图：${message.pageTitle || '当前阅读页'}`;
+          const title = `网页可见区截图：${message.pageTitle || '当前阅读页'}`;
           const content = [
             `## 网页可见区域快照`,
             `- **来源标题**：${message.pageTitle || '当前网页'}`,
@@ -439,18 +438,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       case 'VAULT_INIT': {
         const created = await createVaultHeader(message.password);
-        const sampleId = `v-${randomId(6)}`;
-        const sampleEncrypted = await encryptVaultItem(created.masterKeyBase64, sampleId, {
-          title: 'Xiaomi MiMo API 令牌（示例）',
-          category: 'api-key',
-          domain: 'mimo.mi.com',
-          username: 'xiaomi-developer',
-          secret: 'sk-mimo-demo-token-2026-vibe-coding',
-          note: '用于小米浏览器 Vibe Coding 大赛 AI 流式推理网关'
-        });
         await setStorageMap({
           [STORAGE_KEYS.VAULT_HEADER]: created.header,
-          [STORAGE_KEYS.VAULT_ITEMS]: [sampleEncrypted]
+          [STORAGE_KEYS.VAULT_ITEMS]: []
         });
         await setActiveVaultSession(created.masterKeyBase64, 15);
         const vault = await listDecryptedVaultItems();

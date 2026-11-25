@@ -1,4 +1,4 @@
-/* 严格遵循小米浏览器 SKILL.md & references/examples.md §1 容器宽度规范 */
+/* 容器宽度规范 */
 body {
   margin: 0;
   min-width: min(280px, 100vw);

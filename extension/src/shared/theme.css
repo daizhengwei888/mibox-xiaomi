@@ -1,4 +1,4 @@
-/* 谜盒·灵动知识舱 五套高定皮肤与双端（手机 compact / Pad wide）触控基础规范 */
+/* 谜盒·划词笔记 主题色与手机 / 平板触控基础样式 */
 
 :root,
 html[data-mb-skin="xiaomi-orange"] {
@@ -95,7 +95,7 @@ textarea {
   font-size: 14px;
 }
 
-/* 遵循 SKILL.md 与 references/examples.md §1：所有交互按钮至少 44px 触控高度 */
+/* 所有交互按钮至少 44px 触控高度 */
 .mb-touch-btn {
   appearance: none;
   min-height: 44px;

@@ -1,6 +1,6 @@
-// 谜盒·灵动知识舱 网页端触控灵动胶囊 & 移动端长按划词 AI 浮条（Content Script）
+// 谜盒·划词笔记 网页端触控灵动胶囊 & 移动端长按划词 AI 浮条（Content Script）
 // 专为小米浏览器（手机 / Pad）设计：
-// 1. 遵循 SKILL.md §0 动态测量 pageWidth 与 layout (compact / wide)
+// 1. 动态测量 pageWidth 与 layout (compact / wide)
 // 2. 监听 storage.onChanged 实时同步全局护眼阅读模式与字号
 // 3. 提供手机/Pad 手指划词浮条（存笔记 / AI 精读 / 双语对照 / 复制）与贴边灵动胶囊抽屉
 
@@ -61,262 +61,224 @@
     const style = document.createElement('style');
     style.textContent = `
       :host {
-        font-family: -apple-system, BlinkMacSystemFont, "MiSans", "PingFang SC", "Microsoft YaHei", sans-serif;
-        color: #1e293b;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "MiSans", "PingFang SC", sans-serif;
+        color: #1c1c1e;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        font-size: 15px;
+        line-height: 1.45;
+        letter-spacing: -0.01em;
+        --g-bg: rgba(250, 250, 252, 0.8);
+        --g-edge: rgba(255, 255, 255, 0.75);
+        --g-text: #1c1c1e;
+        --g-muted: rgba(60, 60, 67, 0.6);
+        --g-fill: rgba(118, 118, 128, 0.14);
+        --g-accent: #ff6900;
       }
       * { box-sizing: border-box; }
+      .glass {
+        background: var(--g-bg);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        backdrop-filter: blur(24px) saturate(190%);
+        box-shadow:
+          inset 0 0.5px 0 var(--g-edge),
+          inset 0 0 0 0.5px var(--g-edge),
+          0 10px 30px rgba(0, 0, 0, 0.14),
+          0 1px 3px rgba(0, 0, 0, 0.08);
+      }
       .mb-capsule {
         pointer-events: auto;
         position: fixed;
-        right: 10px;
-        bottom: 86px;
+        right: 12px;
+        bottom: 88px;
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        min-height: 44px;
-        padding: 8px 13px;
+        min-height: 40px;
+        padding: 0 14px;
+        border: 0;
         border-radius: 999px;
-        background: linear-gradient(135deg, #ff6900 0%, #e05300 100%);
-        color: #ffffff;
+        color: var(--g-text);
+        font: inherit;
         font-size: 13px;
-        font-weight: 600;
-        box-shadow: 0 8px 22px rgba(255, 105, 0, 0.34), 0 0 0 1px rgba(255,255,255,0.22) inset;
+        font-weight: 500;
         cursor: pointer;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        transition: transform 0.18s ease, opacity 0.18s ease;
+        transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4);
       }
-      .mb-capsule:active {
-        transform: scale(0.95);
-      }
-      .mb-capsule.hidden {
-        display: none !important;
-      }
-      .mb-capsule-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 0 6px #fff;
-      }
+      .mb-capsule:active { transform: scale(0.94); }
+      .mb-capsule.hidden { display: none; }
+      .mb-capsule-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--g-accent); }
       .mb-sel-bar {
         pointer-events: auto;
         position: fixed;
         left: 50%;
-        bottom: 24px;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
         transform: translateX(-50%);
         display: none;
         align-items: center;
-        gap: 6px;
-        padding: 6px 8px;
-        border-radius: 16px;
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(12px);
-        color: #f8fafc;
-        box-shadow: 0 14px 34px rgba(2, 6, 23, 0.45), 0 0 0 1px rgba(255,255,255,0.12);
-        max-width: min(94vw, 460px);
+        gap: 2px;
+        padding: 5px;
+        border-radius: 999px;
+        max-width: min(94vw, 420px);
         overflow-x: auto;
+        scrollbar-width: none;
       }
-      .mb-sel-bar.visible {
-        display: flex;
+      .mb-sel-bar.visible { display: flex; animation: mb-pop 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+      @keyframes mb-pop {
+        from { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.92); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
       }
       .mb-sel-btn {
         appearance: none;
-        border: none;
-        background: rgba(255,255,255,0.1);
-        color: #ffffff;
-        min-height: 44px;
-        padding: 0 12px;
-        border-radius: 11px;
-        font-size: 13px;
-        font-weight: 600;
+        border: 0;
+        background: transparent;
+        color: var(--g-text);
+        min-height: 42px;
+        padding: 0 16px;
+        border-radius: 999px;
+        font: inherit;
+        font-size: 15px;
+        font-weight: 500;
         white-space: nowrap;
+        flex-shrink: 0;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
       }
-      .mb-sel-btn.primary {
-        background: #ff6900;
-        color: #fff;
-      }
-      .mb-sel-btn:active {
-        opacity: 0.85;
-      }
+      .mb-sel-btn.primary { background: var(--g-accent); color: #fff; }
+      .mb-sel-btn:active { background: var(--g-fill); }
+      .mb-sel-btn.primary:active { filter: brightness(0.92); }
       .mb-drawer-backdrop {
         pointer-events: auto;
         position: fixed;
         inset: 0;
-        background: rgba(2, 6, 23, 0.45);
         display: none;
         align-items: flex-end;
         justify-content: center;
+        background: rgba(0, 0, 0, 0.18);
       }
-      .mb-drawer-backdrop.open {
-        display: flex;
-      }
+      .mb-drawer-backdrop.open { display: flex; }
       .mb-drawer {
-        width: 100%;
-        max-width: 560px;
+        width: min(100%, 520px);
         max-height: 82vh;
-        background: #ffffff;
-        color: #0f172a;
-        border-radius: 22px 22px 0 0;
-        padding: 16px 16px 22px;
-        box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.25);
+        overflow-y: auto;
+        margin: 0 8px calc(8px + env(safe-area-inset-bottom, 0px));
+        padding: 18px 16px 16px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.72);
+        -webkit-backdrop-filter: blur(30px) saturate(190%);
+        backdrop-filter: blur(30px) saturate(190%);
+        box-shadow: inset 0 0.5px 0 var(--g-edge), 0 20px 50px rgba(0, 0, 0, 0.2);
+        color: var(--g-text);
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        overflow-y: auto;
+        gap: 14px;
+        animation: mb-up 0.36s cubic-bezier(0.2, 0.9, 0.3, 1.1);
       }
+      @keyframes mb-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
       .mb-drawer[data-dark="true"] {
-        background: #141923;
-        color: #f1f5f9;
+        --g-text: #f5f5f7;
+        --g-muted: rgba(235, 235, 245, 0.6);
+        --g-fill: rgba(118, 118, 128, 0.3);
+        background: rgba(30, 30, 32, 0.72);
       }
-      .mb-drawer-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-      }
-      .mb-drawer-title {
-        font-size: 16px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .mb-tag {
-        font-size: 11px;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: rgba(255, 105, 0, 0.14);
-        color: #ea580c;
-        font-weight: 600;
-      }
+      .mb-drawer-head { display: flex; align-items: center; justify-content: space-between; }
+      .mb-drawer-title { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; }
+      .mb-tag { font-size: 12px; font-weight: 400; color: var(--g-muted); }
       .mb-close-btn {
-        min-width: 44px;
-        min-height: 44px;
-        border-radius: 12px;
-        border: none;
-        background: rgba(148, 163, 184, 0.16);
-        color: inherit;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
+        width: 30px; height: 30px; border: 0; border-radius: 50%;
+        background: var(--g-fill); color: var(--g-muted); font-size: 13px; cursor: pointer;
       }
-      .mb-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-      }
-      .mb-mode-row {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 6px;
-      }
+      .mb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .mb-mode-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
       .mb-btn {
-        min-height: 44px;
-        padding: 8px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(148, 163, 184, 0.28);
-        background: rgba(248, 250, 252, 0.9);
-        color: #0f172a;
-        font-size: 13px;
-        font-weight: 600;
+        appearance: none;
+        border: 0;
+        min-height: 42px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: var(--g-fill);
+        color: var(--g-text);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 500;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
       }
-      .mb-drawer[data-dark="true"] .mb-btn {
-        background: #1e2636;
-        color: #f1f5f9;
-        border-color: rgba(255,255,255,0.12);
-      }
-      .mb-btn.active, .mb-btn.accent {
-        background: #ff6900 !important;
-        color: #ffffff !important;
-        border-color: #ff6900 !important;
-      }
-      .mb-search-row {
-        display: flex;
-        gap: 8px;
-      }
+      .mb-btn.accent { background: var(--g-accent); color: #fff; }
+      .mb-btn.active { background: var(--g-text); color: #fff; }
+      .mb-drawer[data-dark="true"] .mb-btn.active { color: #000; }
+      .mb-search-row { display: flex; gap: 8px; }
       .mb-input {
         flex: 1;
-        min-height: 44px;
-        padding: 0 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        background: transparent;
-        color: inherit;
-        font-size: 14px;
+        min-width: 0;
+        min-height: 42px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--g-fill);
+        color: var(--g-text);
+        font: inherit;
+        font-size: 15px;
+        outline: none;
       }
       .mb-output {
-        padding: 12px;
-        border-radius: 14px;
-        background: rgba(241, 245, 249, 0.85);
-        font-size: 13px;
-        line-height: 1.65;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: var(--g-fill);
+        font-size: 14px;
+        line-height: 1.6;
         white-space: pre-wrap;
-        max-height: 240px;
+        word-break: break-word;
+        max-height: 34vh;
         overflow-y: auto;
       }
-      .mb-drawer[data-dark="true"] .mb-output {
-        background: #0f131b;
-        color: #e2e8f0;
-      }
       .mb-toast {
-        pointer-events: none;
         position: fixed;
-        top: 18px;
+        top: calc(12px + env(safe-area-inset-top, 0px));
         left: 50%;
-        transform: translateX(-50%);
-        padding: 10px 16px;
+        transform: translateX(-50%) translateY(-8px);
+        padding: 9px 16px;
         border-radius: 999px;
-        background: rgba(15, 23, 42, 0.94);
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+        background: rgba(255, 255, 255, 0.6);
+        -webkit-backdrop-filter: blur(18px) saturate(190%);
+        backdrop-filter: blur(18px) saturate(190%);
+        box-shadow: inset 0 0.5px 0 var(--g-edge), 0 8px 24px rgba(0, 0, 0, 0.14);
+        color: var(--g-text);
+        font-size: 14px;
+        font-weight: 500;
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.2s, transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+        pointer-events: none;
       }
-      .mb-toast.show {
-        opacity: 1;
-      }
+      .mb-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     `;
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
       <div class="mb-toast" id="mb-toast"></div>
-      <button type="button" class="mb-capsule" id="mb-capsule" aria-label="打开谜盒灵动知识舱">
+      <button type="button" class="mb-capsule glass" id="mb-capsule" aria-label="打开谜盒">
         <span class="mb-capsule-dot"></span>
         <span id="mb-capsule-text">谜盒 · 1分</span>
       </button>
-      <div class="mb-sel-bar" id="mb-sel-bar" role="toolbar" aria-label="谜盒划词AI助手">
-        <button type="button" class="mb-sel-btn primary" data-act="clip">📝 存笔记</button>
-        <button type="button" class="mb-sel-btn" data-act="explain">✨ AI 精读</button>
-        <button type="button" class="mb-sel-btn" data-act="translate">🌐 双语解析</button>
-        <button type="button" class="mb-sel-btn" data-act="copy">📋 复制</button>
+      <div class="mb-sel-bar glass" id="mb-sel-bar" role="toolbar" aria-label="划词操作">
+        <button type="button" class="mb-sel-btn primary" data-act="clip">存笔记</button>
+        <button type="button" class="mb-sel-btn" data-act="explain">解释</button>
+        <button type="button" class="mb-sel-btn" data-act="translate">翻译</button>
+        <button type="button" class="mb-sel-btn" data-act="copy">复制</button>
       </div>
       <div class="mb-drawer-backdrop" id="mb-backdrop">
-        <section class="mb-drawer" id="mb-drawer" role="dialog" aria-label="谜盒页内灵动知识舱">
+        <section class="mb-drawer" id="mb-drawer" role="dialog" aria-label="谜盒">
           <div class="mb-drawer-head">
             <div class="mb-drawer-title">
-              <span>📦 谜盒·灵动知识舱</span>
+              <span>谜盒</span>
               <span class="mb-tag" id="mb-vp-badge">手机 compact</span>
             </div>
             <button type="button" class="mb-close-btn" id="mb-close-drawer" aria-label="关闭">✕</button>
           </div>
           <div class="mb-grid">
-            <button type="button" class="mb-btn accent" id="mb-act-bookmark">🔖 一键智能收藏当前页</button>
-            <button type="button" class="mb-btn" id="mb-act-summary">✨ AI 提炼本页三要点</button>
+            <button type="button" class="mb-btn accent" id="mb-act-bookmark">收藏本页</button>
+            <button type="button" class="mb-btn" id="mb-act-summary">本页要点</button>
           </div>
           <div>
-            <div style="font-size:12px;opacity:0.75;margin-bottom:6px;">全局阅读主题（对所有授权网站生效，跨标签秒同步）：</div>
+            <div style="font-size:12px;opacity:0.75;margin-bottom:6px;">阅读模式（所有网页同步）：</div>
             <div class="mb-mode-row" id="mb-mode-row">
               <button type="button" class="mb-btn" data-mode="off">原生</button>
               <button type="button" class="mb-btn" data-mode="warm">暖纸</button>
@@ -325,10 +287,10 @@
             </div>
           </div>
           <div class="mb-search-row">
-            <input type="search" class="mb-input" id="mb-qa-input" placeholder="输入 ? 提问全库收藏与笔记（如：? 小米扩展规范）" />
-            <button type="button" class="mb-btn accent" id="mb-qa-btn">检索直答</button>
+            <input type="search" class="mb-input" id="mb-qa-input" placeholder="搜索收藏和笔记，? 开头可提问" />
+            <button type="button" class="mb-btn accent" id="mb-qa-btn">搜索</button>
           </div>
-          <div class="mb-output" id="mb-drawer-output">点击上方「AI 提炼本页三要点」或在网页长按划词，即可体验 Xiaomi MiMo + 本地零配置双核伴读。</div>
+          <div class="mb-output" id="mb-drawer-output">点「本页要点」看这篇讲了什么；也可以直接在网页上长按选字。</div>
         </section>
       </div>
     `;
@@ -433,7 +395,7 @@
         applyReadingAttributes({ mode });
         chrome.runtime.sendMessage({ type: 'SAVE_READING_MODE', mode }, (res) => {
           if (res?.ok) {
-            showToast(`已切换为「${btn.textContent}」（对所有授权网站同步生效）`);
+            showToast(`已切换为「${btn.textContent}」`);
           }
         });
       });
@@ -447,14 +409,14 @@
       };
       chrome.runtime.sendMessage({ type: 'COLLECT_BOOKMARK', payload }, (res) => {
         if (res?.ok) {
-          out.textContent = `✅ 已收藏《${res.item.title}》\n分组：${res.item.group}\n标签：${(res.item.tags || []).join(' · ')}\nAI 简介：${res.item.brief}`;
-          showToast(res.isNew ? '已智能归档至谜盒收藏夹' : '已更新当前页收藏记录');
+          out.textContent = `已收藏《${res.item.title}》\n分组：${res.item.group}\n标签：${(res.item.tags || []).join(' · ')}\nAI 简介：${res.item.brief}`;
+          showToast(res.isNew ? '已收藏' : '已更新收藏');
         }
       });
     });
 
     sumBtn.addEventListener('click', () => {
-      out.textContent = '⏳ 正在提炼当前网页核心三要点…';
+      out.textContent = '正在提取本页要点…';
       chrome.runtime.sendMessage(
         {
           type: 'AI_ANALYZE',
@@ -478,7 +440,7 @@
     const runQa = () => {
       const query = qaInput.value.trim();
       if (!query) return;
-      out.textContent = '⏳ 正在检索你的私有收藏与笔记库…';
+      out.textContent = '正在搜索…';
       chrome.runtime.sendMessage({ type: 'KB_SEARCH_QA', query }, (res) => {
         if (res?.ok) {
           out.textContent = formatCleanOutput(res.answer);
@@ -525,7 +487,7 @@
           },
           (res) => {
             if (res?.ok) {
-              showToast('📝 已存入谜盒闪念笔记');
+              showToast('已存为笔记');
             }
           }
         );
@@ -533,7 +495,7 @@
       }
 
       const taskMode = act === 'translate' ? 'selection-translate' : 'selection-explain';
-      openDrawerWithOutput('⏳ 正在分析选中段落…');
+      openDrawerWithOutput('正在分析选中段落…');
       chrome.runtime.sendMessage(
         {
           type: 'AI_ANALYZE',
@@ -568,7 +530,7 @@
     }
   }
 
-  // 初始化读取 storage.local 并绑定 storage.onChanged 实时同步（SKILL.md §2 标准闭环）
+  // 初始化读取 storage.local 并绑定 storage.onChanged 实时同步
   if (typeof chrome !== 'undefined' && chrome.storage?.local) {
     chrome.storage.local.get([STORAGE_KEYS.READING, STORAGE_KEYS.SETTINGS], (data) => {
       if (data?.[STORAGE_KEYS.SETTINGS]) {
