@@ -1,0 +1,180 @@
+/* 谜盒·灵动知识舱 五套高定皮肤与双端（手机 compact / Pad wide）触控基础规范 */
+
+:root,
+html[data-mb-skin="xiaomi-orange"] {
+  --mb-bg: #fffaf5;
+  --mb-bg-elevated: #ffffff;
+  --mb-bg-muted: #fff1e6;
+  --mb-text: #18181b;
+  --mb-text-secondary: #52525b;
+  --mb-text-muted: #71717a;
+  --mb-accent: #ff6900;
+  --mb-accent-hover: #e05800;
+  --mb-accent-soft: rgba(255, 105, 0, 0.12);
+  --mb-border: rgba(255, 105, 0, 0.18);
+  --mb-shadow: 0 10px 28px rgba(255, 105, 0, 0.08), 0 2px 8px rgba(15, 23, 42, 0.05);
+  --mb-success: #16a34a;
+  --mb-warning: #d97706;
+  --mb-danger: #dc2626;
+}
+
+html[data-mb-skin="obsidian-dark"] {
+  --mb-bg: #0c1017;
+  --mb-bg-elevated: #151c28;
+  --mb-bg-muted: #1e293b;
+  --mb-text: #f1f5f9;
+  --mb-text-secondary: #cbd5e1;
+  --mb-text-muted: #94a3b8;
+  --mb-accent: #38bdf8;
+  --mb-accent-hover: #0ea5e9;
+  --mb-accent-soft: rgba(56, 189, 248, 0.15);
+  --mb-border: rgba(148, 163, 184, 0.18);
+  --mb-shadow: 0 12px 32px rgba(2, 6, 23, 0.55);
+}
+
+html[data-mb-skin="paper-warm"] {
+  --mb-bg: #f5efe2;
+  --mb-bg-elevated: #fbf7ee;
+  --mb-bg-muted: #ebe1cc;
+  --mb-text: #2b231a;
+  --mb-text-secondary: #5c4b37;
+  --mb-text-muted: #857056;
+  --mb-accent: #b45309;
+  --mb-accent-hover: #92400e;
+  --mb-accent-soft: rgba(180, 83, 9, 0.14);
+  --mb-border: rgba(180, 83, 9, 0.22);
+  --mb-shadow: 0 10px 26px rgba(92, 75, 55, 0.1);
+}
+
+html[data-mb-skin="ceramic-light"] {
+  --mb-bg: #f8fafc;
+  --mb-bg-elevated: #ffffff;
+  --mb-bg-muted: #f1f5f9;
+  --mb-text: #0f172a;
+  --mb-text-secondary: #475569;
+  --mb-text-muted: #64748b;
+  --mb-accent: #2563eb;
+  --mb-accent-hover: #1d4ed8;
+  --mb-accent-soft: rgba(37, 99, 235, 0.11);
+  --mb-border: rgba(148, 163, 184, 0.24);
+  --mb-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+html[data-mb-skin="aurora-jade"] {
+  --mb-bg: #081514;
+  --mb-bg-elevated: #0f2422;
+  --mb-bg-muted: #163330;
+  --mb-text: #ecfdf5;
+  --mb-text-secondary: #a7f3d0;
+  --mb-text-muted: #6ee7b7;
+  --mb-accent: #10b981;
+  --mb-accent-hover: #059669;
+  --mb-accent-soft: rgba(16, 185, 129, 0.18);
+  --mb-border: rgba(16, 185, 129, 0.25);
+  --mb-shadow: 0 12px 30px rgba(2, 16, 14, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "MiSans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--mb-bg);
+  color: var(--mb-text);
+  line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* 遵循 SKILL.md 与 references/examples.md §1：所有交互按钮至少 44px 触控高度 */
+.mb-touch-btn {
+  appearance: none;
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--mb-border);
+  background: var(--mb-bg-elevated);
+  color: var(--mb-text);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.14s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.mb-touch-btn:active {
+  transform: scale(0.97);
+}
+
+.mb-touch-btn.primary {
+  background: var(--mb-accent);
+  color: #ffffff;
+  border-color: var(--mb-accent);
+}
+
+.mb-touch-btn.primary:hover {
+  background: var(--mb-accent-hover);
+}
+
+.mb-touch-btn.soft {
+  background: var(--mb-accent-soft);
+  color: var(--mb-accent);
+  border-color: transparent;
+}
+
+.mb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: var(--mb-accent-soft);
+  color: var(--mb-accent);
+}
+
+.mb-card {
+  background: var(--mb-bg-elevated);
+  border: 1px solid var(--mb-border);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--mb-shadow);
+}
+
+.mb-input,
+.mb-textarea,
+.mb-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--mb-border);
+  background: var(--mb-bg-elevated);
+  color: var(--mb-text);
+}
+
+.mb-textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.mb-input:focus,
+.mb-textarea:focus,
+.mb-select:focus {
+  outline: 2px solid var(--mb-accent);
+  outline-offset: 1px;
+}

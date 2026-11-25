@@ -1,0 +1,71 @@
+/* 谜盒·灵动知识舱 网页护眼阅读样式（严格遵循 SKILL.md 与 references/examples.md §1 白名单选择器规范，不使用全站 * 覆盖） */
+
+/* 1. 暖纸护眼模式（Warm Paper） */
+html[data-mb-reading-mode="warm"] body,
+html[data-mb-reading-mode="warm"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, .content, #content) {
+  background-color: #f6f0e2 !important;
+  color: #2c241b !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html[data-mb-reading-mode="warm"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, .content, #content, body) :is(h1, h2, h3, h4, h5, h6, p, li, blockquote, dd, dt, figcaption) {
+  color: #2c241b !important;
+}
+
+html[data-mb-reading-mode="warm"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) a {
+  color: #b45309 !important;
+}
+
+html[data-mb-reading-mode="warm"] :is(pre, code) {
+  background-color: #ebe2ce !important;
+  color: #3f2e1e !important;
+}
+
+/* 2. 深色夜读模式（OLED Dark） */
+html[data-mb-reading-mode="dark"] body,
+html[data-mb-reading-mode="dark"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, .content, #content) {
+  background-color: #141820 !important;
+  color: #e5e9f0 !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html[data-mb-reading-mode="dark"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, .content, #content, body) :is(h1, h2, h3, h4, h5, h6, p, li, blockquote, dd, dt, figcaption) {
+  color: #e5e9f0 !important;
+}
+
+html[data-mb-reading-mode="dark"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) a {
+  color: #7dd3fc !important;
+}
+
+html[data-mb-reading-mode="dark"] :is(pre, code) {
+  background-color: #1e2430 !important;
+  color: #f1f5f9 !important;
+}
+
+/* 3. 墨水屏高对比模式（E-Ink Reader） */
+html[data-mb-reading-mode="eink"] body,
+html[data-mb-reading-mode="eink"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, .content, #content) {
+  background-color: #f4f4f2 !important;
+  color: #111111 !important;
+  filter: grayscale(100%) contrast(108%);
+}
+
+html[data-mb-reading-mode="eink"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) :is(h1, h2, h3, h4, p, li, blockquote) {
+  color: #111111 !important;
+}
+
+html[data-mb-reading-mode="eink"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) a {
+  color: #000000 !important;
+  text-decoration: underline !important;
+}
+
+/* 4. 移动端与 Pad 正文字号缩放 */
+html[data-mb-font-scale="115"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) :is(p, li, blockquote) {
+  font-size: 1.15em !important;
+  line-height: 1.85 !important;
+}
+
+html[data-mb-font-scale="130"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) :is(p, li, blockquote) {
+  font-size: 1.3em !important;
+  line-height: 1.95 !important;
+}

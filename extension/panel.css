@@ -1,0 +1,166 @@
+/* 手机底部抽屉 (compact < 600px) 与 Pad 侧面板 (wide >= 600px) 动态响应式布局 */
+body {
+  margin: 0;
+  padding: 12px;
+  min-width: min(280px, 100vw);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pn-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--mb-border);
+  margin: 0 auto 10px;
+}
+
+.pn-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pn-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pn-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.pn-brand h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.pn-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--mb-text-muted);
+}
+
+.pn-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pn-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* 当 Pad 分屏或横屏宽度 >= 600px 时自动切换双栏伴读 */
+html[data-mb-layout="wide"] .pn-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+html[data-mb-layout="wide"] .pn-full-span {
+  grid-column: 1 / -1;
+}
+
+.pn-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pn-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pn-sec-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pn-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pn-quick-chips .mb-touch-btn {
+  flex: 1;
+  min-width: 110px;
+  font-size: 12.5px;
+  padding: 6px 10px;
+}
+
+.pn-ask-row {
+  display: flex;
+  gap: 8px;
+}
+
+.pn-stream-box {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--mb-bg-muted);
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.pn-editor-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.pn-textarea {
+  min-height: 140px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.pn-save-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pn-status {
+  font-size: 12px;
+  color: var(--mb-text-muted);
+}
+
+.pn-recall-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+html[data-mb-layout="wide"] .pn-recall-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pn-recall-card {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--mb-bg-muted);
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pn-recall-card b {
+  color: var(--mb-text);
+}

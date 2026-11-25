@@ -1,0 +1,255 @@
+/* 严格遵循小米浏览器 SKILL.md & references/examples.md §1 容器宽度规范 */
+body {
+  margin: 0;
+  min-width: min(280px, 100vw);
+  width: 100%;
+  max-width: 420px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pop-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pop-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.pop-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pop-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pop-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--mb-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pop-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.pop-icon-btn {
+  min-width: 44px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.pop-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  background: var(--mb-bg-muted);
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.pop-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--mb-text-secondary);
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pop-tab.active {
+  background: var(--mb-bg-elevated);
+  color: var(--mb-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.pop-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pop-panel {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pop-panel.active {
+  display: flex;
+}
+
+.pop-page-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pop-page-meta {
+  font-size: 12px;
+  color: var(--mb-text-muted);
+  margin-bottom: 10px;
+}
+
+.pop-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pop-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.pop-sec-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pop-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pop-mode-grid .mb-touch-btn.active,
+.pop-scale-btns .mb-touch-btn.active {
+  background: var(--mb-accent);
+  color: #ffffff;
+  border-color: var(--mb-accent);
+}
+
+.pop-scale-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--mb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--mb-text-secondary);
+}
+
+.pop-scale-btns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.pop-scale-btns .mb-touch-btn {
+  font-size: 12px;
+  padding: 6px 8px;
+}
+
+.pop-dnr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pop-ai-output {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--mb-bg-muted);
+  font-size: 12.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.pop-search-bar {
+  display: flex;
+  gap: 6px;
+}
+
+.pop-search-results {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.pop-result-item {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--mb-bg-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pop-result-item b {
+  display: block;
+  color: var(--mb-text);
+  margin-bottom: 2px;
+}
+
+.pop-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--mb-text-muted);
+  padding: 4px 2px 0;
+}
+
+.pop-link-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--mb-accent);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+
+@media (max-width: 310px) {
+  .pop-action-grid,
+  .pop-mode-grid {
+    grid-template-columns: 1fr;
+  }
+}
