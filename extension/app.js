@@ -854,6 +854,7 @@ function bindAppEvents() {
   });
 
   document.getElementById('contest-btn-reset-demo')?.addEventListener('click', async () => {
+    if (!confirm('恢复示例数据会覆盖现有的收藏和笔记，确定继续？')) return;
     const res = await chrome.runtime.sendMessage({ type: 'RESET_DEMO_DATA' });
     if (res?.ok) {
       state.bookmarks = res.bookmarks;
