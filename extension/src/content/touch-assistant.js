@@ -120,6 +120,8 @@
         padding: 5px;
         border-radius: 999px;
         max-width: min(94vw, 420px);
+        overflow-x: auto;
+        scrollbar-width: none;
       }
       .mb-sel-bar.visible { display: flex; animation: mb-pop 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
       @keyframes mb-pop {
@@ -138,6 +140,7 @@
         font-size: 15px;
         font-weight: 500;
         white-space: nowrap;
+        flex-shrink: 0;
         cursor: pointer;
       }
       .mb-sel-btn.primary { background: var(--g-accent); color: #fff; }
