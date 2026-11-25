@@ -26,7 +26,7 @@
 
 ## 在小米浏览器上安装
 
-1. 把 `dist/mibox-xiaomi-1.1.0.zip` 传到手机或平板。
+1. 把 `dist/mibox-xiaomi-1.1.1.zip` 传到手机或平板。
 2. 小米浏览器 → 扩展程序 → 导入本地扩展，选这个 ZIP（不用解压）。
 3. 打开任意文章页并刷新：
    - 长按选中一段文字，底部出现「存笔记 / 解释 / 翻译 / 复制」
@@ -43,7 +43,7 @@
 ```sh
 sh scripts/check.sh            # 运行语法检查 + 单元测试 + 打包 ZIP + 参赛包规格检查
 node scripts/e2e-verify.mjs    # 使用 Playwright 真实加载扩展验证手机/Pad 视口并生成 1080x1440 预览图
-sh scripts/pack.sh             # 单独打包 dist/mibox-xiaomi-1.1.0.zip
+sh scripts/pack.sh             # 单独打包 dist/mibox-xiaomi-1.1.1.zip
 ```
 
 ### 录屏转成参赛规格（3:4、1080×1440、≤ 5MB、< 15 秒）

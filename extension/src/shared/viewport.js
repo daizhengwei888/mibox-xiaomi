@@ -95,3 +95,13 @@ export function extractDomain(url) {
     return '本地页面';
   }
 }
+
+// 部分手机浏览器首次打开弹窗时窗口宽度很小，再整体放大铺满屏幕，文字会被放大数倍；
+// 此时把布局宽度固定为屏幕宽度，让浏览器按比例缩放。
+export function ensureMinLayoutWidth(min = 320) {
+  const meta = document.querySelector('meta[name="viewport"]');
+  const width = document.documentElement.clientWidth || window.innerWidth;
+  if (!meta || !width || width >= min) return;
+  const target = Math.min(Math.max(window.screen?.width || 360, min), 480);
+  meta.setAttribute('content', `width=${target}, viewport-fit=cover`);
+}

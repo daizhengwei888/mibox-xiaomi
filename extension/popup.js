@@ -5,8 +5,11 @@ import {
   installViewportObserver,
   applySkinToDocument,
   extractDomain,
-  escapeHtml
+  escapeHtml,
+  ensureMinLayoutWidth
 } from './src/shared/viewport.js';
+
+ensureMinLayoutWidth();
 
 let appState = {
   settings: { skin: 'xiaomi-orange' },
