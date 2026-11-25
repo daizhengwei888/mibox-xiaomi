@@ -109,5 +109,5 @@ test('3. 视口测量与 Pad 端无 downloads API 时的自动降级导出', asy
   const exported = await exportKnowledgeBundle('markdown');
   assert.equal(exported.ok, true);
   assert.equal(exported.downloaded, false);
-  assert.match(exported.text, /谜盒·灵动知识舱 导出归档/);
+  assert.match(exported.text, /谜盒·划词笔记 导出归档/);
 });

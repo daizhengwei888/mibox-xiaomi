@@ -1,4 +1,4 @@
-/* 谜盒·灵动知识舱 网页护眼阅读样式（严格遵循 SKILL.md 与 references/examples.md §1 白名单选择器规范，不使用全站 * 覆盖） */
+/* 谜盒·划词笔记 网页护眼阅读样式 */
 
 /* 1. 暖纸护眼模式（Warm Paper） */
 html[data-mb-reading-mode="warm"] body,
@@ -68,4 +68,17 @@ html[data-mb-font-scale="115"] :is(main, article, [role="main"], .article-conten
 html[data-mb-font-scale="130"] :is(main, article, [role="main"], .article-content, .post-content, .entry-content, body) :is(p, li, blockquote) {
   font-size: 1.3em !important;
   line-height: 1.95 !important;
+}
+
+/* 网页显影保持选区与原文节点，退出时只移除高亮和临时属性。 */
+::highlight(mibox-evidence) {
+  background-color: #ffe2a0;
+  color: #322002;
+}
+
+[data-mibox-reveal-muted] { opacity: .28 !important; }
+
+[data-mibox-reveal-match] {
+  outline: 2px solid #bf5500 !important;
+  outline-offset: 2px;
 }

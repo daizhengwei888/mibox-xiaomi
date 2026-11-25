@@ -3,52 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>谜盒·灵动知识舱 — 小米浏览器双端 AI 知识工作台</title>
+  <title>谜盒 · 划词笔记</title>
   <link rel="stylesheet" href="src/shared/theme.css" />
   <link rel="stylesheet" href="app.css" />
+  <link rel="stylesheet" href="src/shared/glass.css" />
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="mb-glass" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage preserveAspectRatio="none" result="map" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3ClinearGradient id='x'%3E%3Cstop offset='0' stop-color='%23000'/%3E%3Cstop offset='1' stop-color='%23f00'/%3E%3C/linearGradient%3E%3ClinearGradient id='y' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23000'/%3E%3Cstop offset='1' stop-color='%230f0'/%3E%3C/linearGradient%3E%3Crect width='100' height='100' fill='url(%23x)'/%3E%3Crect width='100' height='100' fill='url(%23y)' style='mix-blend-mode:screen'/%3E%3Crect x='12' y='18' width='76' height='64' rx='30' fill='%23808000' style='filter:blur(6px)'/%3E%3C/svg%3E"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="-28" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
   <div class="app-shell">
     <!-- 侧边导航（wide >= 600px 显示在左侧） / 底部拇指导航（compact < 600px 固定在底部） -->
     <aside class="app-nav" role="navigation" aria-label="主导航">
       <div class="nav-brand">
         <img src="icons/128.png" alt="谜盒" class="nav-logo" />
         <div class="nav-brand-text">
-          <h1>谜盒·灵动知识舱</h1>
-          <span>Xiaomi Browser Edition</span>
+          <h1>谜盒</h1>
+          <span>划词笔记 · 护眼阅读</span>
         </div>
       </div>
 
       <div class="nav-items" id="app-nav-items">
-        <button type="button" class="nav-btn active" data-view="home">
-          <span class="nav-ico">🏠</span>
-          <span class="nav-lbl">灵动总览</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="bookmarks">
-          <span class="nav-ico">🔖</span>
-          <span class="nav-lbl">智能收藏</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="notes">
-          <span class="nav-ico">📝</span>
-          <span class="nav-lbl">伴读笔记</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="vault">
-          <span class="nav-ico">🔐</span>
-          <span class="nav-lbl">加密保险箱</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="ai">
-          <span class="nav-ico">🤖</span>
-          <span class="nav-lbl">MiMo & 护眼</span>
-        </button>
-        <button type="button" class="nav-btn" data-view="contest">
-          <span class="nav-ico">🏆</span>
-          <span class="nav-lbl">双端自检导出</span>
-        </button>
+        <button type="button" class="nav-btn active" data-view="home"><span class="nav-lbl">首页</span></button>
+        <button type="button" class="nav-btn" data-view="notes"><span class="nav-lbl">笔记</span></button>
+        <button type="button" class="nav-btn" data-view="bookmarks"><span class="nav-lbl">收藏</span></button>
+        <button type="button" class="nav-btn" data-view="ai"><span class="nav-lbl">设置</span></button>
       </div>
 
       <div class="nav-foot">
         <div class="vp-readout" id="app-vp-readout">
-          <b>视口探针 (SKILL.md §0)</b>
+          <b>当前布局</b>
           <span id="app-vp-detail">测量中…</span>
         </div>
       </div>
@@ -58,10 +45,9 @@
     <div class="app-content">
       <header class="app-topbar">
         <div class="topbar-left">
-          <span class="mb-pill">小米浏览器 × Xiaomi MiMo</span>
-          <span class="topbar-toast" id="app-toast-msg">本地零知识存储 · 跨标签护眼秒同步</span>
+                    <span class="topbar-toast" id="app-toast-msg">收藏和笔记只保存在本机</span>
         </div>
-        <div class="topbar-skins" id="topbar-skin-pills" aria-label="五套高定皮肤切换"></div>
+        <div class="topbar-skins" id="topbar-skin-pills" aria-label="主题色"></div>
       </header>
 
       <!-- View 1: 灵动总览 (Home) -->
@@ -69,29 +55,29 @@
         <section class="mb-card hero-card">
           <div class="hero-top">
             <div>
-              <h2 class="hero-title">把网页划词、护眼伴读与加密记忆装进小米浏览器</h2>
-              <p class="hero-desc">面向手机与 Pad 双端触控优化：网页右侧灵动胶囊、长按划词 AI 浮条、四档全局护眼阅读跨标签秒同步、Xiaomi MiMo 双核流式推理。</p>
+              <h2 class="hero-title">在手机上读网页，长按就能记下来</h2>
+              <p class="hero-desc">选中网页里的一段文字，底部弹出「存笔记 / 解释 / 翻译 / 复制」。存下的笔记自动带上出处，回到这里统一翻看。</p>
             </div>
             <div class="hero-stats">
               <div class="stat-box">
                 <b id="home-stat-bm">0</b>
-                <span>智能收藏</span>
+                <span>收藏</span>
               </div>
               <div class="stat-box">
                 <b id="home-stat-note">0</b>
-                <span>伴读笔记</span>
+                <span>笔记</span>
               </div>
               <div class="stat-box">
                 <b id="home-stat-vault">AES-256</b>
-                <span>零知识保险箱</span>
+                <span>加密保险箱</span>
               </div>
             </div>
           </div>
 
           <div class="hero-search-row">
-            <input type="search" class="mb-input hero-search-input" id="home-qa-input" placeholder="输入 ? 向全库收藏与笔记提问（如：? 小米浏览器双端规范是什么），或输入关键词检索…" />
-            <button type="button" class="mb-touch-btn primary" id="home-btn-qa">🧠 全库直答</button>
-            <button type="button" class="mb-touch-btn soft" id="home-btn-open-drawer">🗂️ 唤出伴读抽屉</button>
+            <input type="search" class="mb-input hero-search-input" id="home-qa-input" placeholder="搜索收藏和笔记，以 ? 开头可以提问" />
+            <button type="button" class="mb-touch-btn primary" id="home-btn-qa">搜索</button>
+            <button type="button" class="mb-touch-btn soft" id="home-btn-open-drawer">打开侧边栏</button>
           </div>
           <div class="hero-qa-output hidden" id="home-qa-output"></div>
         </section>
@@ -100,20 +86,20 @@
         <section class="mb-card quick-ctrl-card">
           <div class="sec-bar">
             <div>
-              <h3>👁️ 全局阅读主题（对所有授权网站生效，多标签页毫秒同步）</h3>
-              <p class="sec-sub">通过 storage.onChanged 驱动所有已打开网页实时切换护眼底色与字号，关闭即恢复原貌</p>
+              <h3>阅读模式</h3>
+              <p class="sec-sub">切换后，已打开的网页一起变；选「原生网页」恢复原样</p>
             </div>
             <span class="mb-pill" id="home-reading-badge">当前：原生网页</span>
           </div>
           <div class="reading-ctrl-grid">
             <div class="mode-pills" id="home-reading-modes">
-              <button type="button" class="mb-touch-btn" data-mode="off">🌐 原生网页</button>
-              <button type="button" class="mb-touch-btn" data-mode="warm">📜 暖纸护眼</button>
-              <button type="button" class="mb-touch-btn" data-mode="dark">🌙 深色夜读</button>
-              <button type="button" class="mb-touch-btn" data-mode="eink">📖 墨水屏</button>
+              <button type="button" class="mb-touch-btn" data-mode="off">原生网页</button>
+              <button type="button" class="mb-touch-btn" data-mode="warm">暖纸护眼</button>
+              <button type="button" class="mb-touch-btn" data-mode="dark">深色夜读</button>
+              <button type="button" class="mb-touch-btn" data-mode="eink">墨水屏</button>
             </div>
             <div class="dnr-quick-box">
-              <button type="button" class="mb-touch-btn" id="home-btn-dnr">🛡️ DNR 省流净图：未开启</button>
+              <button type="button" class="mb-touch-btn" id="home-btn-dnr">屏蔽广告图片：未开启</button>
             </div>
           </div>
         </section>
@@ -121,7 +107,7 @@
         <div class="home-two-col">
           <section class="mb-card">
             <div class="sec-bar">
-              <h3>⭐ 星标与常去收藏</h3>
+              <h3>常看的收藏</h3>
               <button type="button" class="mb-touch-btn soft" data-goto="bookmarks">管理全部 →</button>
             </div>
             <div class="card-list" id="home-starred-bookmarks"></div>
@@ -129,7 +115,7 @@
 
           <section class="mb-card">
             <div class="sec-bar">
-              <h3>📝 最新伴读与划词笔记</h3>
+              <h3>最近的笔记</h3>
               <button type="button" class="mb-touch-btn soft" data-goto="notes">新建 / 编辑 →</button>
             </div>
             <div class="card-list" id="home-recent-notes"></div>
@@ -142,10 +128,10 @@
         <section class="mb-card">
           <div class="sec-bar">
             <div>
-              <h3>🔖 智能收藏舱（三行信息卡 · 自动提炼简介与分类）</h3>
-              <p class="sec-sub">每条收藏自动提取站名、一句话核心摘要、域名分组与预计阅读时长</p>
+              <h3>收藏</h3>
+              <p class="sec-sub">收藏时自动生成一句话简介、分组和预计阅读时长</p>
             </div>
-            <button type="button" class="mb-touch-btn primary" id="bm-btn-toggle-add">＋ 新增智能收藏</button>
+            <button type="button" class="mb-touch-btn primary" id="bm-btn-toggle-add">＋ 添加收藏</button>
           </div>
 
           <form class="add-form hidden" id="bm-add-form">
@@ -153,9 +139,9 @@
               <input type="url" class="mb-input" id="bm-input-url" placeholder="网页地址 https://..." required />
               <input type="text" class="mb-input" id="bm-input-title" placeholder="网页标题（可自动补全）" required />
             </div>
-            <textarea class="mb-textarea" id="bm-input-brief" placeholder="一句话简介或正文片段（留空将由 AI 双核引擎自动提炼摘要并分类）"></textarea>
+            <textarea class="mb-textarea" id="bm-input-brief" placeholder="简介（留空会根据标题和正文自动生成）"></textarea>
             <div class="form-actions">
-              <button type="submit" class="mb-touch-btn primary">✨ 智能提炼并保存</button>
+              <button type="submit" class="mb-touch-btn primary">保存</button>
               <button type="button" class="mb-touch-btn" id="bm-btn-cancel-add">取消</button>
             </div>
           </form>
@@ -174,23 +160,23 @@
         <div class="notes-layout">
           <section class="mb-card notes-editor-card">
             <div class="sec-bar">
-              <h3 id="note-editor-heading">✍️ 撰写伴读笔记（支持 Markdown 实时渲染）</h3>
+              <h3 id="note-editor-heading">写笔记（支持 Markdown）</h3>
               <div class="btn-group">
-                <button type="button" class="mb-touch-btn soft" id="note-btn-ai-polish">✨ AI 润色/提取待办</button>
-                <button type="button" class="mb-touch-btn primary" id="note-btn-save">💾 保存笔记</button>
+                <button type="button" class="mb-touch-btn soft" id="note-btn-ai-polish">整理格式</button>
+                <button type="button" class="mb-touch-btn primary" id="note-btn-save">保存</button>
               </div>
             </div>
             <input type="hidden" id="note-edit-id" value="" />
             <div class="form-grid-2">
-              <input type="text" class="mb-input" id="note-input-title" placeholder="笔记标题（如：小米浏览器扩展开发要点）" />
+              <input type="text" class="mb-input" id="note-input-title" placeholder="标题" />
               <input type="url" class="mb-input" id="note-input-url" placeholder="关联来源网址（选填）" />
             </div>
-            <textarea class="mb-textarea note-code-area" id="note-input-content" placeholder="# 标题&#10;在网页上手指长按选中文字，即可点击浮条一键存入此处；也支持直接用 Markdown 编写待办与代码块。"></textarea>
+            <textarea class="mb-textarea note-code-area" id="note-input-content" placeholder="在网页上长按选中文字，点「存笔记」就会出现在这里。也可以直接写 Markdown。"></textarea>
           </section>
 
           <section class="mb-card notes-list-card">
             <div class="sec-bar">
-              <h3>📚 笔记归档库</h3>
+              <h3>全部笔记</h3>
               <input type="search" class="mb-input filter-search" id="note-search-input" placeholder="搜索笔记全文或标签…" />
             </div>
             <div class="notes-rendered-list" id="notes-list-container"></div>
@@ -200,11 +186,12 @@
 
       <!-- View 4: AES-256-GCM 零知识隐私保险箱 (Vault) -->
       <main class="app-view" id="view-vault">
+        <button type="button" class="mb-touch-btn soft back-btn" data-goto="ai">← 返回设置</button>
         <section class="mb-card">
           <div class="sec-bar">
             <div>
-              <h3>🔐 零知识加密保险箱（PBKDF2 210,000次 + AES-256-GCM 认证加密）</h3>
-              <p class="sec-sub">所有账号密码、API 密钥与私密笔记仅在本地使用主密码加密，绑定记录 ID 作为附加认证数据（AAD），超时自动锁定</p>
+              <h3>加密保险箱</h3>
+              <p class="sec-sub">用主密码在本机加密保存账号密码（PBKDF2 + AES-256-GCM），不上传，闲置后自动锁定</p>
             </div>
             <span class="mb-pill" id="vault-state-badge">检测中</span>
           </div>
@@ -215,23 +202,23 @@
             <p class="sec-sub">初始化后将生成唯一的 64 位十六进制恢复密钥，忘记主密码时凭恢复密钥可无损重置。</p>
             <div class="form-grid-2">
               <input type="password" class="mb-input" id="vault-init-pw" placeholder="输入主密码（至少 8 个字符）" />
-              <button type="button" class="mb-touch-btn primary" id="vault-btn-init">🔐 创建加密保险箱并生成恢复密钥</button>
+              <button type="button" class="mb-touch-btn primary" id="vault-btn-init">创建保险箱</button>
             </div>
           </div>
 
           <!-- 恢复密钥展示横幅 -->
           <div class="vault-recovery-banner hidden" id="vault-recovery-banner">
-            <b>⚠️ 请妥善保存你的保险箱恢复密钥（忘记主密码时的唯一凭证）：</b>
+            <b>请妥善保存你的保险箱恢复密钥（忘记主密码时的唯一凭证）：</b>
             <code id="vault-recovery-code"></code>
-            <button type="button" class="mb-touch-btn soft" id="vault-btn-copy-recovery">📋 复制恢复密钥</button>
+            <button type="button" class="mb-touch-btn soft" id="vault-btn-copy-recovery">复制恢复密钥</button>
           </div>
 
           <!-- 状态 B: 已初始化但处于锁定状态 -->
           <div class="vault-box hidden" id="vault-unlock-panel">
-            <h4>🔒 保险箱当前已锁定</h4>
+            <h4>保险箱当前已锁定</h4>
             <div class="form-grid-2">
               <input type="password" class="mb-input" id="vault-unlock-pw" placeholder="输入主密码解锁…" />
-              <button type="button" class="mb-touch-btn primary" id="vault-btn-unlock">🔓 解锁保险箱</button>
+              <button type="button" class="mb-touch-btn primary" id="vault-btn-unlock">解锁保险箱</button>
             </div>
             <details style="margin-top:10px;">
               <summary style="cursor:pointer;font-size:12.5px;color:var(--mb-accent);font-weight:600;">忘记主密码？使用恢复密钥重置</summary>
@@ -249,26 +236,26 @@
               <span class="sec-sub" id="vault-clipboard-timer">复制密文后将在 30 秒后自动清空剪贴板</span>
               <div class="btn-group">
                 <button type="button" class="mb-touch-btn soft" id="vault-btn-show-add">＋ 新增加密凭据</button>
-                <button type="button" class="mb-touch-btn" id="vault-btn-lock">🔒 立即锁定</button>
+                <button type="button" class="mb-touch-btn" id="vault-btn-lock">立即锁定</button>
               </div>
             </div>
 
             <form class="add-form hidden" id="vault-add-form">
               <div class="form-grid-2">
-                <input type="text" class="mb-input" id="vault-item-title" placeholder="名称（如：Xiaomi MiMo 生产密钥）" required />
+                <input type="text" class="mb-input" id="vault-item-title" placeholder="名称（如：公司邮箱）" required />
                 <select class="mb-select" id="vault-item-cat">
-                  <option value="api-key">🔑 API 密钥 / Token</option>
-                  <option value="login">👤 网站登录账号</option>
-                  <option value="secret-note">📄 私密加密备忘</option>
+                  <option value="api-key">API 密钥 / Token</option>
+                  <option value="login">网站登录账号</option>
+                  <option value="secret-note">私密加密备忘</option>
                 </select>
               </div>
               <div class="form-grid-2">
-                <input type="text" class="mb-input" id="vault-item-domain" placeholder="适用域名（如 mimo.mi.com）" />
+                <input type="text" class="mb-input" id="vault-item-domain" placeholder="适用网站（如 mail.example.com）" />
                 <input type="text" class="mb-input" id="vault-item-user" placeholder="账号 / 用户名（选填）" />
               </div>
               <input type="password" class="mb-input" id="vault-item-secret" placeholder="密码 / API Key 密文内容" required />
               <div class="form-actions">
-                <button type="submit" class="mb-touch-btn primary">🔐 AES-256-GCM 加密存入</button>
+                <button type="submit" class="mb-touch-btn primary">加密保存</button>
               </div>
             </form>
 
@@ -277,14 +264,14 @@
         </section>
       </main>
 
-      <!-- View 5: Xiaomi MiMo AI 引擎与护眼净网设置 (AI & Reader) -->
+      <!-- View 5: 设置 -->
       <main class="app-view" id="view-ai">
         <div class="home-two-col">
           <section class="mb-card">
             <div class="sec-bar">
               <div>
-                <h3>🤖 Xiaomi MiMo 首席预置 + 本地零配置双核 AI 网关</h3>
-                <p class="sec-sub">未填 Key 时默认启用本地零配置智能提取引擎；填入 Xiaomi MiMo 或兼容 Key 后自动开启真 SSE 流式生成</p>
+                <h3>AI 服务</h3>
+                <p class="sec-sub">不填 Key 时用本地规则提取要点，离线可用；填入 MiMo 或其他 OpenAI 兼容接口的 Key 后，解释和翻译交给大模型</p>
               </div>
             </div>
 
@@ -300,87 +287,85 @@
                 <input type="text" class="mb-input" id="ai-input-model" placeholder="mimo-v2.6" />
               </label>
               <label>
-                <span>API Key（仅保存在本机 storage.local，绝不上传第三方）</span>
-                <input type="password" class="mb-input" id="ai-input-key" placeholder="留空即使用谜盒内置零配置本地智能引擎" />
+                <span>API Key（只保存在本机）</span>
+                <input type="password" class="mb-input" id="ai-input-key" placeholder="留空则使用本地模式" />
               </label>
               <div class="form-actions">
-                <button type="button" class="mb-touch-btn primary" id="ai-btn-save">💾 保存 AI 配置</button>
-                <button type="button" class="mb-touch-btn soft" id="ai-btn-test">⚡ 立即测试双核推理</button>
+                <button type="button" class="mb-touch-btn primary" id="ai-btn-save">保存</button>
+                <button type="button" class="mb-touch-btn soft" id="ai-btn-test">测试</button>
               </div>
               <div class="hero-qa-output hidden" id="ai-test-output"></div>
             </div>
           </section>
 
           <section class="mb-card">
-            <h3>📱 网页触控交互与 DNR 净网规则</h3>
-            <p class="sec-sub">针对小米浏览器手机端与 Pad 端触控手势优化</p>
+            <h3>网页内功能</h3>
+            <p class="sec-sub">在网页里显示的按钮和过滤规则</p>
 
             <div class="toggle-list">
               <div class="toggle-row">
                 <div>
-                  <b>启用网页右侧「谜盒灵动胶囊」</b>
-                  <span>在授权网页右下角显示预计阅读时长与一键速查抽屉入口</span>
+                  <b>右下角阅读时长胶囊</b>
+                  <span>点一下打开页内面板：收藏本页、看要点、切换阅读模式</span>
                 </div>
                 <input type="checkbox" id="set-touch-capsule" checked />
               </div>
 
               <div class="toggle-row">
                 <div>
-                  <b>启用移动端「长按划词 AI 浮条」</b>
-                  <span>手指选中网页文字后弹出「存笔记 / AI 精读 / 双语解析 / 复制」</span>
+                  <b>选中文字后弹出操作条</b>
+                  <span>存笔记 / 解释 / 翻译 / 复制</span>
                 </div>
                 <input type="checkbox" id="set-selection-bar" checked />
               </div>
 
               <div class="toggle-row">
                 <div>
-                  <b>启用 declarativeNetRequest 动态净图拦截</b>
-                  <span>拦截匹配网页中 `/ads/`、`banner_ad` 等干扰图片资源</span>
+                  <b>屏蔽广告图片</b>
+                  <span>拦截地址里带 /ads/、banner_ad 的图片请求，省流量</span>
                 </div>
                 <input type="checkbox" id="set-dnr-enabled" />
               </div>
             </div>
 
             <label style="display:block;margin-top:12px;">
-              <span style="font-size:12.5px;font-weight:600;">DNR 额外净化域名列表（逗号分隔）</span>
+              <span style="font-size:12.5px;font-weight:600;">额外屏蔽的域名（逗号分隔）</span>
               <input type="text" class="mb-input" id="set-dnr-domains" placeholder="doubleclick.net, googlesyndication.com" style="margin-top:6px;" />
             </label>
-            <button type="button" class="mb-touch-btn primary" id="set-btn-save-interaction" style="margin-top:12px;">保存交互与 DNR 规则</button>
+            <button type="button" class="mb-touch-btn primary" id="set-btn-save-interaction" style="margin-top:12px;">保存</button>
           </section>
         </div>
+        <section class="mb-card more-card">
+          <h3>更多</h3>
+          <div class="form-actions" style="flex-wrap:wrap;">
+            <button type="button" class="mb-touch-btn soft" data-goto="vault">加密保险箱 →</button>
+            <button type="button" class="mb-touch-btn soft" data-goto="contest">导出与备份 →</button>
+          </div>
+        </section>
       </main>
 
       <!-- View 6: 参赛自检与手机/Pad 双端自适应导出 (Contest Studio) -->
       <main class="app-view" id="view-contest">
+        <button type="button" class="mb-touch-btn soft back-btn" data-goto="ai">← 返回设置</button>
         <div class="home-two-col">
-          <section class="mb-card">
-            <div class="sec-bar">
-              <div>
-                <h3>🏆 小米浏览器 Vibe Coding 大赛合规自检矩阵</h3>
-                <p class="sec-sub">依据官方 mibrowser-extension-dev (SKILL.md v4-fixed) 实时核验当前运行环境</p>
-              </div>
-              <button type="button" class="mb-touch-btn soft" id="contest-btn-recheck">🔄 重新自检</button>
-            </div>
-            <div class="check-matrix" id="contest-check-matrix"></div>
-          </section>
 
           <section class="mb-card">
             <div class="sec-bar">
               <div>
-                <h3>📤 手机 / Pad 双端自适应导出与演示数据管理</h3>
-                <p class="sec-sub">遵循 SKILL.md §3：手机端调用 chrome.downloads 下载文件；Pad 端（无 downloads API）同步提供完整预览与一键复制</p>
+                <h3>导出与备份</h3>
+                <p class="sec-sub">导出 JSON 完整备份或 Markdown 笔记；不能下载文件的设备上，可以直接复制下方内容</p>
               </div>
             </div>
 
             <div class="form-actions" style="flex-wrap:wrap;">
-              <button type="button" class="mb-touch-btn primary" id="contest-btn-export-json">📦 导出 JSON 完整备份</button>
-              <button type="button" class="mb-touch-btn soft" id="contest-btn-export-md">📝 导出 Markdown 知识归档</button>
-              <button type="button" class="mb-touch-btn" id="contest-btn-copy-export">📋 复制下方预览内容</button>
-              <button type="button" class="mb-touch-btn" id="contest-btn-reset-demo">✨ 恢复参赛精选演示库</button>
+              <button type="button" class="mb-touch-btn primary" id="contest-btn-export-json">导出 JSON 完整备份</button>
+              <button type="button" class="mb-touch-btn soft" id="contest-btn-export-md">导出 Markdown 知识归档</button>
+              <button type="button" class="mb-touch-btn" id="contest-btn-copy-export">复制下方预览内容</button>
+              <button type="button" class="mb-touch-btn" id="contest-btn-reset-demo">恢复示例数据</button>
             </div>
 
             <div class="sec-sub" id="contest-export-status" style="margin:8px 0;">点击上方导出按钮，即可生成跨端备份并在此处实时预览。</div>
-            <textarea class="mb-textarea note-code-area" id="contest-export-preview" readonly placeholder="导出内容预览区（兼容小米 Pad 端一键复制）…"></textarea>
+            <textarea class="mb-textarea note-code-area" id="contest-export-preview" readonly placeholder="导出内容会显示在这里"></textarea>
           </section>
         </div>
       </main>

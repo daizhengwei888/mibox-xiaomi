@@ -1,4 +1,4 @@
-/* 严格遵循小米浏览器 SKILL.md & references/examples.md §1 容器宽度规范 */
+/* 容器宽度规范 */
 body {
   margin: 0;
   min-width: min(280px, 100vw);
@@ -24,6 +24,8 @@ body {
   min-width: 0;
 }
 
+.pop-brand > div { min-width: 0; }
+
 .pop-logo {
   width: 34px;
   height: 34px;
@@ -41,6 +43,8 @@ body {
   margin: 0;
   font-size: 15px;
   font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -56,7 +60,7 @@ body {
 .pop-head-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
@@ -251,5 +255,26 @@ body {
   .pop-action-grid,
   .pop-mode-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (pointer: coarse) {
+  /* Xiaomi Browser injects inline zoom after measuring the extension popup. */
+  html { zoom: 1 !important; }
+
+  body {
+    width: var(--mb-popup-width, 360px);
+    min-width: 0;
+    max-width: none;
+  }
+
+  .pop-header .pop-icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .pop-main .mb-card {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
