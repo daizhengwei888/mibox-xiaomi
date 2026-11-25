@@ -72,13 +72,13 @@ async function loadStateAndRenderRecall() {
 
   const combined = [
     ...notes.slice(0, 3).map((n) => ({
-      badge: '📝 笔记',
+      badge: '笔记',
       title: n.title,
       desc: (n.content || '').replace(/\s+/g, ' ').slice(0, 86),
       time: formatTimeAgo(n.updatedAt)
     })),
     ...bms.slice(0, 3).map((b) => ({
-      badge: '🔖 收藏',
+      badge: '收藏',
       title: b.title,
       desc: b.brief || b.url,
       time: formatTimeAgo(b.updatedAt)
@@ -103,7 +103,7 @@ async function loadStateAndRenderRecall() {
 
 async function runCompanionAi(taskMode, customPrompt = '') {
   const box = document.getElementById('pn-ai-stream');
-  if (box) box.textContent = '⏳ 正在由 Xiaomi MiMo + 本地双核引擎生成伴读分析…';
+  if (box) box.textContent = '正在生成…';
   await refreshActiveTabContext();
 
   if (customPrompt.startsWith('?') || customPrompt.startsWith('？')) {
@@ -179,7 +179,7 @@ function bindPanelEvents() {
     const raw = ta?.value?.trim() || document.getElementById('pn-ai-stream')?.textContent || '';
     if (!raw) return;
     const st = document.getElementById('pn-status-text');
-    if (st) st.textContent = '⏳ 正在结构化润色并提取待办…';
+    if (st) st.textContent = '正在整理…';
     const res = await chrome.runtime.sendMessage({
       type: 'AI_ANALYZE',
       taskMode: 'polish-note',
@@ -188,7 +188,7 @@ function bindPanelEvents() {
     });
     if (res?.ok && ta) {
       ta.value = res.text;
-      if (st) st.textContent = '✨ 已完成 AI 结构化润色';
+      if (st) st.textContent = '已整理';
     }
   });
 
@@ -198,7 +198,7 @@ function bindPanelEvents() {
     const st = document.getElementById('pn-status-text');
     const content = bodyEl?.value?.trim() || '';
     if (!content) {
-      if (st) st.textContent = '⚠️ 请先输入笔记内容';
+      if (st) st.textContent = '请先输入笔记内容';
       return;
     }
     const res = await chrome.runtime.sendMessage({
@@ -213,7 +213,7 @@ function bindPanelEvents() {
     if (res?.ok) {
       if (titleEl) titleEl.value = '';
       if (bodyEl) bodyEl.value = '';
-      if (st) st.textContent = `✅ 已归档《${res.item.title}》`;
+      if (st) st.textContent = `已归档《${res.item.title}》`;
       await loadStateAndRenderRecall();
     }
   });
@@ -223,7 +223,7 @@ async function initPanel() {
   installViewportObserver((vp) => {
     const badge = document.getElementById('pn-vp-badge');
     if (badge) {
-      badge.textContent = `${vp.layout === 'wide' ? 'Pad 宽屏侧栏' : '手机底部抽屉'} · ${vp.pageWidth}px`;
+      badge.textContent = `${vp.layout === 'wide' ? '宽屏' : '手机'} · ${vp.pageWidth}px`;
     }
   });
   bindPanelEvents();

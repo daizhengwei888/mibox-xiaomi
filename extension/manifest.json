@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "谜盒·灵动知识舱",
+  "name": "谜盒·划词笔记",
   "version": "1.0.0",
-  "description": "面向小米浏览器手机与Pad的AI伴读与私有知识舱：提供网页触控灵动胶囊、长按划词AI精读与闪念笔记、四档全局护眼阅读跨标签同步、DNR净图过滤、智能收藏与AES-256-GCM加密保险箱，预置Xiaomi MiMo流式大模型与零配置本地智能引擎。",
+  "description": "手机上读网页，长按选中文字就能存笔记、解释、翻译；另有四种阅读模式、广告图片屏蔽和本地加密保险箱。",
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
   "action": {
-    "default_title": "谜盒·灵动知识舱",
+    "default_title": "谜盒·划词笔记",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/16.png",

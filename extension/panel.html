@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>谜盒·伴读抽屉面板</title>
+  <title>谜盒 · 侧边栏</title>
   <link rel="stylesheet" href="src/shared/theme.css" />
   <link rel="stylesheet" href="panel.css" />
 </head>
@@ -15,13 +15,13 @@
         <div class="pn-brand">
           <img src="icons/48.png" alt="谜盒" class="pn-logo" />
           <div>
-            <h2>谜盒·AI 伴读抽屉</h2>
-            <p class="pn-sub" id="pn-tab-title">手机底部抽屉 / Pad 伴读侧栏自适应</p>
+            <h2>谜盒</h2>
+            <p class="pn-sub" id="pn-tab-title">边看边记</p>
           </div>
         </div>
         <div class="pn-actions">
           <span class="mb-pill" id="pn-vp-badge">compact</span>
-          <button type="button" class="mb-touch-btn primary" id="pn-open-full">打开全屏舱</button>
+          <button type="button" class="mb-touch-btn primary" id="pn-open-full">完整页面</button>
         </div>
       </div>
     </div>
@@ -31,42 +31,42 @@
     <!-- 左侧/上侧：当前网页 AI 伴读与追问 -->
     <section class="mb-card pn-section">
       <div class="pn-sec-head">
-        <h3>✨ 当前页 AI 伴读与追问</h3>
-        <button type="button" class="mb-touch-btn soft" id="pn-btn-refresh-page">🔄 刷新页上下文</button>
+        <h3>问问这一页</h3>
+        <button type="button" class="mb-touch-btn soft" id="pn-btn-refresh-page">重新读取</button>
       </div>
       <div class="pn-quick-chips">
-        <button type="button" class="mb-touch-btn soft" data-prompt="summary">📌 三要点速读</button>
-        <button type="button" class="mb-touch-btn soft" data-prompt="selection-explain">🔍 核心论点拆解</button>
-        <button type="button" class="mb-touch-btn soft" data-prompt="selection-translate">🌐 关键术语中英对照</button>
+        <button type="button" class="mb-touch-btn soft" data-prompt="summary">要点</button>
+        <button type="button" class="mb-touch-btn soft" data-prompt="selection-explain">解释论点</button>
+        <button type="button" class="mb-touch-btn soft" data-prompt="selection-translate">术语中英对照</button>
       </div>
       <div class="pn-ask-row">
-        <input type="text" class="mb-input" id="pn-ask-input" placeholder="针对当前网页或全库提问（支持 ? 全库检索）…" />
+        <input type="text" class="mb-input" id="pn-ask-input" placeholder="针对这一页提问，? 开头搜索全部笔记" />
         <button type="button" class="mb-touch-btn primary" id="pn-btn-ask">提问</button>
       </div>
-      <div class="pn-stream-box" id="pn-ai-stream">在小米浏览器手机端以底部抽屉展开、Pad 端以分屏侧栏展开。点击上方快捷按钮即可边看网页边提炼核心知识。</div>
+      <div class="pn-stream-box" id="pn-ai-stream">点上面的按钮，或直接提问。</div>
     </section>
 
     <!-- 右侧/下侧：边看边记 Markdown 伴读笔记 -->
     <section class="mb-card pn-section">
       <div class="pn-sec-head">
-        <h3>📝 边看边记（Markdown 伴读笔记）</h3>
+        <h3>笔记</h3>
         <div class="pn-editor-tools">
-          <button type="button" class="mb-touch-btn soft" id="pn-btn-quote">❝ 插入来源引用</button>
-          <button type="button" class="mb-touch-btn soft" id="pn-btn-polish">✨ AI 润色/提待办</button>
+          <button type="button" class="mb-touch-btn soft" id="pn-btn-quote">插入出处</button>
+          <button type="button" class="mb-touch-btn soft" id="pn-btn-polish">整理格式</button>
         </div>
       </div>
-      <input type="text" class="mb-input" id="pn-note-title" placeholder="伴读笔记标题（留空自动提取首行）" />
+      <input type="text" class="mb-input" id="pn-note-title" placeholder="标题（留空取第一行）" />
       <textarea class="mb-textarea pn-textarea" id="pn-note-body" placeholder="# 阅读笔记&#10;- 记录当前网页的核心启发&#10;- [ ] 待跟进事项"></textarea>
       <div class="pn-save-row">
-        <span class="pn-status" id="pn-status-text">已自动关联当前网页 URL</span>
-        <button type="button" class="mb-touch-btn primary" id="pn-btn-save-note">💾 存入谜盒笔记</button>
+        <span class="pn-status" id="pn-status-text">会自动带上本页链接</span>
+        <button type="button" class="mb-touch-btn primary" id="pn-btn-save-note">保存</button>
       </div>
     </section>
 
     <!-- 关联记忆召回 -->
     <section class="mb-card pn-section pn-full-span">
       <div class="pn-sec-head">
-        <h3>🗂️ 近期关联收藏与笔记</h3>
+        <h3>最近的收藏和笔记</h3>
         <span class="mb-pill" id="pn-total-count">0 条记录</span>
       </div>
       <div class="pn-recall-list" id="pn-recall-list"></div>

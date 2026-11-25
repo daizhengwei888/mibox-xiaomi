@@ -1,4 +1,4 @@
-// 谜盒·小米版 统一本地存储仓库（基于 chrome.storage.local，遵守 SKILL.md §2/§3 存储与双端导出规范）
+// 谜盒·小米版 统一本地存储仓库
 
 import { randomId } from './crypto.js';
 import { inferBookmarkIntelligence } from './ai-engine.js';
@@ -44,114 +44,91 @@ export const DEFAULT_DNR = {
 };
 
 /**
- * 参赛开箱演示种子数据：首次安装在小米浏览器打开即呈现饱满的收藏与 Markdown 笔记
+ * 首次安装时写入的示例数据，让第一次打开就能看到收藏和笔记长什么样
  */
 export function buildContestSeedData() {
   const now = Date.now();
+  const hour = 3600 * 1000;
   const bookmarks = [
     {
-      id: 'bm-xiaomi-vibe',
-      title: '小米浏览器 Vibe Coding 大赛 · 创意扩展程序赛道',
+      id: 'bm-selection-api',
+      title: 'Selection API - Web API | MDN',
+      url: 'https://developer.mozilla.org/zh-CN/docs/Web/API/Selection',
+      domain: 'developer.mozilla.org',
+      group: '研发工程',
+      tags: ['开发技术', '划词'],
+      brief: '网页里选中的文字由 Selection 对象表示，手机上长按选字后可以用 getSelection() 拿到内容和位置。',
+      starred: true,
+      visits: 9,
+      readingMinutes: 6,
+      createdAt: now - hour * 30,
+      updatedAt: now - hour * 3
+    },
+    {
+      id: 'bm-xiaomi-rules',
+      title: '小米浏览器扩展程序：手机与平板的布局适配',
       url: 'https://vibe-coding.browser.miui.com/rules',
       domain: 'vibe-coding.browser.miui.com',
       group: '小米与硬件',
-      tags: ['小米生态', 'VibeCoding', '浏览器扩展'],
-      brief: '小米浏览器 × Xiaomi MiMo 联合举办的 AI 创作大赛，支持在手机与 Pad 端导入 MV3 扩展程序 ZIP 包真实运行。',
+      tags: ['小米浏览器', '双端适配'],
+      brief: '小米浏览器手机和平板都能装扩展；页面宽度小于 600px 按手机排版，大于等于 600px 按平板排版。',
       starred: true,
-      visits: 18,
+      visits: 6,
       readingMinutes: 4,
-      createdAt: now - 3600 * 1000 * 12,
-      updatedAt: now - 3600 * 1000 * 2
+      createdAt: now - hour * 20,
+      updatedAt: now - hour * 6
     },
     {
-      id: 'bm-xiaomi-mimo',
-      title: 'Xiaomi MiMo 小米大模型技术文档与最新动态 (v2.6)',
-      url: 'https://mimo.mi.com/docs/zh-CN/news/latest/v2-6',
-      domain: 'mimo.mi.com',
-      group: 'AI与前沿',
-      tags: ['AI与大模型', '小米生态', 'MiMo'],
-      brief: 'Xiaomi MiMo 最新模型演进与 Token Plan 开发者生态指南，为移动端与浏览器扩展提供低延迟流式推理能力。',
-      starred: true,
-      visits: 14,
-      readingMinutes: 6,
-      createdAt: now - 3600 * 1000 * 24,
-      updatedAt: now - 3600 * 1000 * 5
-    },
-    {
-      id: 'bm-mv3-spec',
-      title: '小米浏览器双端扩展开发规范（手机 / Pad 自适应与 API 边界）',
-      url: 'https://vibe-coding.browser.miui.com/creator/plugin',
-      domain: 'vibe-coding.browser.miui.com',
+      id: 'bm-storage-api',
+      title: 'chrome.storage API | Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/storage',
+      domain: 'developer.chrome.com',
       group: '研发工程',
-      tags: ['开发技术', 'ManifestV3', '双端适配'],
-      brief: '基于 clientWidth >= 600px 动态切换 compact/wide 布局，利用 storage.onChanged 实现多标签页护眼阅读实时同步。',
-      starred: true,
-      visits: 11,
-      readingMinutes: 5,
-      createdAt: now - 3600 * 1000 * 36,
-      updatedAt: now - 3600 * 1000 * 8
-    },
-    {
-      id: 'bm-webcrypto-vault',
-      title: 'W3C Web Cryptography API · PBKDF2 与 AES-256-GCM 零知识加密标准',
-      url: 'https://developer.mozilla.org/zh-CN/docs/Web/API/SubtleCrypto',
-      domain: 'developer.mozilla.org',
-      group: '研发工程',
-      tags: ['开发技术', '隐私安全', 'WebCrypto'],
-      brief: '在浏览器扩展本地使用 SubtleCrypto 派生 256 位密钥并绑定 AAD 附加认证数据，实现不依赖任何云端服务器的私密保险箱。',
+      tags: ['开发技术', '本地存储'],
+      brief: 'storage.local 保存在本机；storage.onChanged 能让所有打开的页面在设置变化时同时收到通知。',
       starred: false,
-      visits: 7,
+      visits: 4,
       readingMinutes: 8,
-      createdAt: now - 3600 * 1000 * 48,
-      updatedAt: now - 3600 * 1000 * 16
+      createdAt: now - hour * 48,
+      updatedAt: now - hour * 12
     }
   ];
 
   const notes = [
     {
-      id: 'note-mi-guide',
-      title: '📱 谜盒·灵动知识舱：小米浏览器（手机/Pad）15秒演示速览',
-      sourceUrl: 'https://vibe-coding.browser.miui.com/rules',
-      sourceTitle: '小米浏览器 Vibe Coding 大赛',
-      tags: ['小米生态', '演示指南', '触控交互'],
+      id: 'note-howto',
+      title: '三步上手',
+      sourceUrl: '',
+      sourceTitle: '',
+      tags: ['使用说明'],
       starred: true,
       content: [
-        '# 谜盒·灵动知识舱（小米浏览器专版）',
+        '# 三步上手',
         '',
-        '专为**小米浏览器（手机与 Pad 双端）**量身设计的触控优先知识舱与 AI 伴读扩展：',
+        '1. 打开任意文章，手指长按选中一段文字',
+        '2. 底部弹出操作条，点「存笔记」，这段话连同出处就到了这里',
+        '3. 晚上看书伤眼？点右下角胶囊，切到「暖纸」或「夜读」，所有标签页一起变',
         '',
-        '## 核心亮点',
-        '- [x] **网页触控灵动胶囊 & 长按划词浮条**：弥补移动端无右键菜单与快捷键痛点，手指选中文字即可「存为笔记 / AI 精读 / 双语对照」。',
-        '- [x] **四档全局护眼阅读秒同步**：支持 `暖纸护眼`、`深色夜读`、`墨水屏` 与字号无级调节，基于 `storage.onChanged` 跨标签页毫秒级同步。',
-        '- [x] **Xiaomi MiMo 首席预置 + 本地零配置双核 AI**：开箱即用提炼网页三要点，支持 `? 问题` 全库检索直答。',
-        '- [x] **AES-256-GCM 零知识保险箱**：21 万次 PBKDF2 密钥派生 + 恢复密钥保护私密账号与 API 令牌。',
-        '',
-        '```js',
-        '// 双端自适应视口探针（SKILL.md §0 标准）',
-        'const pageWidth = document.documentElement.clientWidth || innerWidth;',
-        'const layout = pageWidth >= 600 ? "wide" : "compact";',
-        '```'
+        '不懂的词点「解释」，外文点「翻译」。默认在本机处理，不需要注册或填 Key。'
       ].join('\n'),
-      createdAt: now - 3600 * 1000 * 10,
-      updatedAt: now - 3600 * 1000 * 1
+      createdAt: now - hour * 10,
+      updatedAt: now - hour * 1
     },
     {
-      id: 'note-mimo-clip',
-      title: '✨ 网页划词摘录：Xiaomi MiMo 流式推理与移动端伴读',
-      sourceUrl: 'https://mimo.mi.com/docs/zh-CN/news/latest/v2-6',
-      sourceTitle: 'Xiaomi MiMo 技术文档',
-      tags: ['AI与大模型', '划词笔记'],
+      id: 'note-clip-demo',
+      title: '摘录：手机上怎么拿到选中的文字',
+      sourceUrl: 'https://developer.mozilla.org/zh-CN/docs/Web/API/Selection',
+      sourceTitle: 'Selection API - MDN',
+      tags: ['划词笔记'],
       starred: false,
       content: [
-        '## 原文划词摘录',
-        '> “给浏览器装上你的专属能力：划词解读、护眼净网、私有知识检索，说给 AI 听，今晚它就上线。”',
+        '> Selection 对象表示用户选择的文本范围或插入符号的当前位置。',
         '',
-        '## AI 伴读批注',
-        '- **场景价值**：在手机或小米平板上阅读长文时，无需频繁切换 App，通过底部伴读抽屉（`sidePanel`）即可边看边记。',
-        '- **双端导出兼容**：手机端调用 `chrome.downloads` 一键导出备份，Pad 端自动提供 JSON/Markdown 预览与一键复制。'
+        '- 手机上没有右键菜单，长按选字后监听 selectionchange 就能弹出自己的操作条',
+        '- 操作条要放在拇指够得到的位置，按钮高度不低于 44px'
       ].join('\n'),
-      createdAt: now - 3600 * 1000 * 20,
-      updatedAt: now - 3600 * 1000 * 4
+      createdAt: now - hour * 20,
+      updatedAt: now - hour * 4
     }
   ];
 
@@ -349,7 +326,7 @@ export async function deleteNote(id) {
 }
 
 /**
- * 严格遵循 SKILL.md §3 手机 / Pad 差异规范：
+ * 手机 / Pad 差异规范：
  * 手机支持 chrome.downloads.download，Pad 不可用；始终返回完整导出文本供预览与一键复制
  */
 export async function exportKnowledgeBundle(format = 'json') {
@@ -372,7 +349,7 @@ export async function exportKnowledgeBundle(format = 'json') {
     filename = `mibox-xiaomi-notes-${new Date().toISOString().slice(0, 10)}.md`;
     mime = 'text/markdown';
     const mdParts = [
-      `# 谜盒·灵动知识舱 导出归档（${new Date().toLocaleString('zh-CN')}）`,
+      `# 谜盒·划词笔记 导出归档（${new Date().toLocaleString('zh-CN')}）`,
       ``,
       `## 一、精选收藏（${bookmarks.length} 条）`,
       ...bookmarks.map(

@@ -1,4 +1,4 @@
-// 谜盒·灵动知识舱 Popup 控制舱（严格遵循 SKILL.md §0/§2/§3 双端规范与跨上下文确认闭环）
+// 谜盒·划词笔记 Popup 控制舱
 
 import {
   SKINS,
@@ -62,7 +62,7 @@ async function probeActiveTabContext() {
           return;
         }
       } catch {
-        // 若页面尚未注入 content_script，回退使用 SKILL.md §2 顶层 executeScript（不传 allFrames）
+        // 若页面尚未注入 content_script，回退使用顶层 executeScript（不传 allFrames）
       }
 
       if (chrome.scripting?.executeScript) {
@@ -87,7 +87,7 @@ async function probeActiveTabContext() {
         }
       }
     } else if (metaEl) {
-      metaEl.textContent = '浏览器内部页（打开普通网页可体验划词伴读与护眼同步）';
+      metaEl.textContent = '浏览器内部页，打开普通网页后可用';
     }
   } catch {}
 }
@@ -125,8 +125,8 @@ function renderStateToPopup() {
   if (aiBadge) {
     const hasKey = Boolean(appState.settings?.ai?.apiKey);
     aiBadge.textContent = hasKey
-      ? `${appState.settings.ai.model || 'Xiaomi MiMo'} 流式`
-      : 'Xiaomi MiMo + 本地零配置';
+      ? `${appState.settings.ai.model || '云端模型'}`
+      : '本地模式';
   }
 }
 
@@ -167,7 +167,7 @@ async function updateReadingPreference(patch) {
       }
     } catch {}
   }
-  if (syncBadge) syncBadge.textContent = '全局已存·当前页未注入';
+  if (syncBadge) syncBadge.textContent = '已保存，刷新页面生效';
   setStatus('全局设置已保存，当前页未应用（刷新授权网页即可生效）');
 }
 
@@ -198,7 +198,7 @@ function bindPopupEvents() {
     }
   });
 
-  // 显式用户点击打开 sidePanel（严格遵循 SKILL.md §2：指定 tabId / windowId，从用户点击入口调用）
+  // 显式用户点击打开 sidePanel
   document.getElementById('btn-open-drawer')?.addEventListener('click', async () => {
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -221,7 +221,7 @@ function bindPopupEvents() {
   // 一键收藏当前页
   document.getElementById('btn-collect-page')?.addEventListener('click', async () => {
     const btn = document.getElementById('btn-collect-page');
-    btn.textContent = '⏳ 智能归档中…';
+    btn.textContent = '收藏中…';
     const res = await chrome.runtime.sendMessage({
       type: 'COLLECT_BOOKMARK',
       payload: {
@@ -231,7 +231,7 @@ function bindPopupEvents() {
       }
     });
     if (res?.ok) {
-      btn.textContent = '✅ 已收藏当前页';
+      btn.textContent = '已收藏';
       const metaEl = document.getElementById('page-meta-display');
       if (metaEl) {
         metaEl.textContent = `[${res.item.group}] ${(res.item.tags || []).map((t) => `#${t}`).join(' ')} · ${res.item.brief}`;
@@ -243,24 +243,24 @@ function bindPopupEvents() {
       }
       setStatus(`已归档至「${res.item.group}」分组`);
     } else {
-      btn.textContent = '🔖 收藏当前页';
+      btn.textContent = '收藏本页';
     }
   });
 
-  // 可见页截图入笔记（SKILL.md §2 captureVisibleTab）
+  // 可见页截图入笔记
   document.getElementById('btn-capture-page')?.addEventListener('click', async () => {
     const btn = document.getElementById('btn-capture-page');
-    btn.textContent = '⏳ 截图中…';
+    btn.textContent = '截图中…';
     const res = await chrome.runtime.sendMessage({
       type: 'CAPTURE_VISIBLE_TAB_TO_NOTE',
       pageTitle: activeTabInfo.title,
       pageUrl: activeTabInfo.url
     });
     if (res?.ok) {
-      btn.textContent = '✅ 已存截图笔记';
+      btn.textContent = '已存截图笔记';
       setStatus('已抓取当前可见页画面并存入笔记');
     } else {
-      btn.textContent = '📸 截图入笔记';
+      btn.textContent = '截图入笔记';
       setStatus(res?.error || '当前页面不支持截图');
     }
   });
@@ -290,8 +290,8 @@ function bindPopupEvents() {
       renderStateToPopup();
       setStatus(
         appState.dnr.enabled
-          ? `已启用 ${res.activeRulesCount} 条 DNR 净图规则，刷新网页后验证生效`
-          : '已关闭 DNR 净图拦截规则'
+          ? `已开启 ${res.activeRulesCount} 条屏蔽规则，刷新页面生效`
+          : '已关闭广告图片屏蔽'
       );
     } else {
       setStatus(res?.reason || 'DNR 规则切换失败');
@@ -301,7 +301,7 @@ function bindPopupEvents() {
   // AI 提炼本页三要点
   document.getElementById('btn-ai-summary')?.addEventListener('click', async () => {
     const out = document.getElementById('ai-output-box');
-    if (out) out.textContent = '⏳ 正在由双核 AI 引擎提炼当前网页要点…';
+    if (out) out.textContent = '正在提取要点…';
     const res = await chrome.runtime.sendMessage({
       type: 'AI_ANALYZE',
       taskMode: 'summary',
@@ -333,7 +333,7 @@ function bindPopupEvents() {
       }
     });
     if (res?.ok) {
-      setStatus('✅ 已将 AI 速读要点归档至谜盒笔记');
+      setStatus('已将 AI 速读要点归档至谜盒笔记');
     }
   });
 
@@ -355,7 +355,7 @@ function bindPopupEvents() {
         .map(
           (m) => `
           <div class="pop-result-item" data-url="${escapeHtml(m.url || '')}">
-            <b>${m.type === 'note' ? '📝' : '🔖'} ${escapeHtml(m.title)}</b>
+            <b>${m.type === 'note' ? '' : ''} ${escapeHtml(m.title)}</b>
             <span>${escapeHtml(m.content.slice(0, 78))}…</span>
           </div>
         `
@@ -397,7 +397,7 @@ function bindPopupEvents() {
     });
     if (res?.ok) {
       ta.value = '';
-      setStatus('✅ 闪念笔记已保存');
+      setStatus('闪念笔记已保存');
       const dash = await chrome.runtime.sendMessage({ type: 'GET_DASHBOARD_DATA' });
       if (dash?.ok) {
         appState.notes = dash.notes;
@@ -410,7 +410,7 @@ function bindPopupEvents() {
 async function initPopup() {
   installViewportObserver((vp) => {
     const el = document.getElementById('vp-indicator');
-    if (el) el.textContent = `${vp.layout} · ${vp.pageWidth}px`;
+    if (el) el.textContent = vp.layout === 'wide' ? '宽屏' : '手机';
   });
 
   bindPopupEvents();

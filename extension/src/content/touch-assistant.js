@@ -1,6 +1,6 @@
-// 谜盒·灵动知识舱 网页端触控灵动胶囊 & 移动端长按划词 AI 浮条（Content Script）
+// 谜盒·划词笔记 网页端触控灵动胶囊 & 移动端长按划词 AI 浮条（Content Script）
 // 专为小米浏览器（手机 / Pad）设计：
-// 1. 遵循 SKILL.md §0 动态测量 pageWidth 与 layout (compact / wide)
+// 1. 动态测量 pageWidth 与 layout (compact / wide)
 // 2. 监听 storage.onChanged 实时同步全局护眼阅读模式与字号
 // 3. 提供手机/Pad 手指划词浮条（存笔记 / AI 精读 / 双语对照 / 复制）与贴边灵动胶囊抽屉
 
@@ -292,31 +292,31 @@
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
       <div class="mb-toast" id="mb-toast"></div>
-      <button type="button" class="mb-capsule" id="mb-capsule" aria-label="打开谜盒灵动知识舱">
+      <button type="button" class="mb-capsule" id="mb-capsule" aria-label="打开谜盒">
         <span class="mb-capsule-dot"></span>
         <span id="mb-capsule-text">谜盒 · 1分</span>
       </button>
-      <div class="mb-sel-bar" id="mb-sel-bar" role="toolbar" aria-label="谜盒划词AI助手">
-        <button type="button" class="mb-sel-btn primary" data-act="clip">📝 存笔记</button>
-        <button type="button" class="mb-sel-btn" data-act="explain">✨ AI 精读</button>
-        <button type="button" class="mb-sel-btn" data-act="translate">🌐 双语解析</button>
-        <button type="button" class="mb-sel-btn" data-act="copy">📋 复制</button>
+      <div class="mb-sel-bar" id="mb-sel-bar" role="toolbar" aria-label="划词操作">
+        <button type="button" class="mb-sel-btn primary" data-act="clip">存笔记</button>
+        <button type="button" class="mb-sel-btn" data-act="explain">解释</button>
+        <button type="button" class="mb-sel-btn" data-act="translate">翻译</button>
+        <button type="button" class="mb-sel-btn" data-act="copy">复制</button>
       </div>
       <div class="mb-drawer-backdrop" id="mb-backdrop">
-        <section class="mb-drawer" id="mb-drawer" role="dialog" aria-label="谜盒页内灵动知识舱">
+        <section class="mb-drawer" id="mb-drawer" role="dialog" aria-label="谜盒">
           <div class="mb-drawer-head">
             <div class="mb-drawer-title">
-              <span>📦 谜盒·灵动知识舱</span>
+              <span>谜盒</span>
               <span class="mb-tag" id="mb-vp-badge">手机 compact</span>
             </div>
             <button type="button" class="mb-close-btn" id="mb-close-drawer" aria-label="关闭">✕</button>
           </div>
           <div class="mb-grid">
-            <button type="button" class="mb-btn accent" id="mb-act-bookmark">🔖 一键智能收藏当前页</button>
-            <button type="button" class="mb-btn" id="mb-act-summary">✨ AI 提炼本页三要点</button>
+            <button type="button" class="mb-btn accent" id="mb-act-bookmark">收藏本页</button>
+            <button type="button" class="mb-btn" id="mb-act-summary">本页要点</button>
           </div>
           <div>
-            <div style="font-size:12px;opacity:0.75;margin-bottom:6px;">全局阅读主题（对所有授权网站生效，跨标签秒同步）：</div>
+            <div style="font-size:12px;opacity:0.75;margin-bottom:6px;">阅读模式（所有网页同步）：</div>
             <div class="mb-mode-row" id="mb-mode-row">
               <button type="button" class="mb-btn" data-mode="off">原生</button>
               <button type="button" class="mb-btn" data-mode="warm">暖纸</button>
@@ -325,10 +325,10 @@
             </div>
           </div>
           <div class="mb-search-row">
-            <input type="search" class="mb-input" id="mb-qa-input" placeholder="输入 ? 提问全库收藏与笔记（如：? 小米扩展规范）" />
-            <button type="button" class="mb-btn accent" id="mb-qa-btn">检索直答</button>
+            <input type="search" class="mb-input" id="mb-qa-input" placeholder="搜索收藏和笔记，? 开头可提问" />
+            <button type="button" class="mb-btn accent" id="mb-qa-btn">搜索</button>
           </div>
-          <div class="mb-output" id="mb-drawer-output">点击上方「AI 提炼本页三要点」或在网页长按划词，即可体验 Xiaomi MiMo + 本地零配置双核伴读。</div>
+          <div class="mb-output" id="mb-drawer-output">点「本页要点」看这篇讲了什么；也可以直接在网页上长按选字。</div>
         </section>
       </div>
     `;
@@ -433,7 +433,7 @@
         applyReadingAttributes({ mode });
         chrome.runtime.sendMessage({ type: 'SAVE_READING_MODE', mode }, (res) => {
           if (res?.ok) {
-            showToast(`已切换为「${btn.textContent}」（对所有授权网站同步生效）`);
+            showToast(`已切换为「${btn.textContent}」`);
           }
         });
       });
@@ -447,14 +447,14 @@
       };
       chrome.runtime.sendMessage({ type: 'COLLECT_BOOKMARK', payload }, (res) => {
         if (res?.ok) {
-          out.textContent = `✅ 已收藏《${res.item.title}》\n分组：${res.item.group}\n标签：${(res.item.tags || []).join(' · ')}\nAI 简介：${res.item.brief}`;
-          showToast(res.isNew ? '已智能归档至谜盒收藏夹' : '已更新当前页收藏记录');
+          out.textContent = `已收藏《${res.item.title}》\n分组：${res.item.group}\n标签：${(res.item.tags || []).join(' · ')}\nAI 简介：${res.item.brief}`;
+          showToast(res.isNew ? '已收藏' : '已更新收藏');
         }
       });
     });
 
     sumBtn.addEventListener('click', () => {
-      out.textContent = '⏳ 正在提炼当前网页核心三要点…';
+      out.textContent = '正在提取本页要点…';
       chrome.runtime.sendMessage(
         {
           type: 'AI_ANALYZE',
@@ -478,7 +478,7 @@
     const runQa = () => {
       const query = qaInput.value.trim();
       if (!query) return;
-      out.textContent = '⏳ 正在检索你的私有收藏与笔记库…';
+      out.textContent = '正在搜索…';
       chrome.runtime.sendMessage({ type: 'KB_SEARCH_QA', query }, (res) => {
         if (res?.ok) {
           out.textContent = formatCleanOutput(res.answer);
@@ -525,7 +525,7 @@
           },
           (res) => {
             if (res?.ok) {
-              showToast('📝 已存入谜盒闪念笔记');
+              showToast('已存为笔记');
             }
           }
         );
@@ -533,7 +533,7 @@
       }
 
       const taskMode = act === 'translate' ? 'selection-translate' : 'selection-explain';
-      openDrawerWithOutput('⏳ 正在分析选中段落…');
+      openDrawerWithOutput('正在分析选中段落…');
       chrome.runtime.sendMessage(
         {
           type: 'AI_ANALYZE',
@@ -568,7 +568,7 @@
     }
   }
 
-  // 初始化读取 storage.local 并绑定 storage.onChanged 实时同步（SKILL.md §2 标准闭环）
+  // 初始化读取 storage.local 并绑定 storage.onChanged 实时同步
   if (typeof chrome !== 'undefined' && chrome.storage?.local) {
     chrome.storage.local.get([STORAGE_KEYS.READING, STORAGE_KEYS.SETTINGS], (data) => {
       if (data?.[STORAGE_KEYS.SETTINGS]) {

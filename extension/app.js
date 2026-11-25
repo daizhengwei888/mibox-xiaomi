@@ -1,4 +1,4 @@
-// 谜盒·灵动知识舱 全屏工作台主控制器（小米浏览器手机 compact / Pad wide 双端自适应）
+// 谜盒·划词笔记 全屏工作台主控制器（小米浏览器手机 compact / Pad wide 双端自适应）
 
 import {
   SKINS,
@@ -76,7 +76,7 @@ function renderSafeMarkdown(mdText) {
     } else if (line.startsWith('> ')) {
       html.push(`<blockquote>${escapeHtml(line.slice(2))}</blockquote>`);
     } else if (line.startsWith('- [x] ') || line.startsWith('- [X] ')) {
-      html.push(`<div>✅ <s>${escapeHtml(line.slice(6))}</s></div>`);
+      html.push(`<div><s>${escapeHtml(line.slice(6))}</s></div>`);
     } else if (line.startsWith('- [ ] ')) {
       html.push(`<div>⬜ ${escapeHtml(line.slice(6))}</div>`);
     } else if (line.startsWith('- ')) {
@@ -94,7 +94,8 @@ function renderSafeMarkdown(mdText) {
 
 function switchView(viewName) {
   document.querySelectorAll('#app-nav-items .nav-btn').forEach((btn) => {
-    btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
+    const v = btn.getAttribute('data-view');
+    btn.classList.toggle('active', v === viewName || (v === 'ai' && (viewName === 'vault' || viewName === 'contest')));
   });
   document.querySelectorAll('.app-view').forEach((v) => {
     v.classList.toggle('active', v.id === `view-${viewName}`);
@@ -129,7 +130,7 @@ function renderTopbarSkins() {
       if (res?.ok) {
         state.settings = res.settings;
         renderTopbarSkins();
-        notifyToast(`已切换高定主题：${skinId}`);
+        notifyToast(`已切换主题色：${skinId}`);
       }
     });
   });
@@ -153,7 +154,7 @@ function renderHomeView() {
   const dnrBtn = document.getElementById('home-btn-dnr');
   if (dnrBtn) {
     const on = Boolean(state.dnr?.enabled);
-    dnrBtn.textContent = on ? '🛡️ DNR 省流净图：已开启 ✓' : '🛡️ DNR 省流净图：未开启';
+    dnrBtn.textContent = on ? '屏蔽广告图片：已开启' : '屏蔽广告图片：未开启';
     dnrBtn.classList.toggle('primary', on);
   }
 
@@ -167,7 +168,7 @@ function renderHomeView() {
         (b) => `
       <div class="bm-card">
         <div class="bm-card-top">
-          <a class="bm-card-title" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">⭐ ${escapeHtml(b.title)}</a>
+          <a class="bm-card-title" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
           <span class="mb-pill">${escapeHtml(b.group || '精选')}</span>
         </div>
         <div class="bm-card-brief">${escapeHtml(b.brief || '')}</div>
@@ -190,7 +191,7 @@ function renderHomeView() {
         (n) => `
       <div class="note-card">
         <div class="bm-card-top">
-          <b>📝 ${escapeHtml(n.title)}</b>
+          <b>${escapeHtml(n.title)}</b>
           <span style="font-size:11px;color:var(--mb-text-muted);">${escapeHtml(formatTimeAgo(n.updatedAt))}</span>
         </div>
         <div class="note-md-body">${renderSafeMarkdown((n.content || '').slice(0, 220))}</div>
@@ -247,8 +248,8 @@ function renderBookmarksView() {
       <div class="bm-card-top">
         <a class="bm-card-title" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
         <div class="btn-group">
-          <button type="button" class="bm-mini-btn" data-star="${escapeHtml(b.id)}" title="切换星标">${b.starred ? '⭐' : '☆'}</button>
-          <button type="button" class="bm-mini-btn" data-del-bm="${escapeHtml(b.id)}" title="删除收藏">🗑️</button>
+          <button type="button" class="bm-mini-btn" data-star="${escapeHtml(b.id)}" title="切换星标">${b.starred ? '★' : '☆'}</button>
+          <button type="button" class="bm-mini-btn" data-del-bm="${escapeHtml(b.id)}" title="删除收藏">删除</button>
         </div>
       </div>
       <div class="bm-card-brief">${escapeHtml(b.brief || '')}</div>
@@ -309,10 +310,10 @@ function renderNotesView() {
       (n) => `
     <article class="note-card">
       <div class="bm-card-top">
-        <b>📝 ${escapeHtml(n.title)}</b>
+        <b>${escapeHtml(n.title)}</b>
         <div class="btn-group">
           <button type="button" class="bm-mini-btn" data-edit-note="${escapeHtml(n.id)}" title="载入编辑器">✏️</button>
-          <button type="button" class="bm-mini-btn" data-del-note="${escapeHtml(n.id)}" title="删除笔记">🗑️</button>
+          <button type="button" class="bm-mini-btn" data-del-note="${escapeHtml(n.id)}" title="删除笔记">删除</button>
         </div>
       </div>
       <div class="note-md-body">${renderSafeMarkdown(n.content)}</div>
@@ -377,12 +378,12 @@ function renderVaultView() {
   }
 
   if (!state.vault?.unlocked) {
-    if (badge) badge.textContent = '🔒 已加密锁定';
+    if (badge) badge.textContent = '已锁定';
     unlockPanel?.classList.remove('hidden');
     return;
   }
 
-  if (badge) badge.textContent = `🔓 已解锁（${state.vault.items?.length || 0} 条密文）`;
+  if (badge) badge.textContent = `已解锁 · ${state.vault.items?.length || 0} 条`;
   unlockedPanel?.classList.remove('hidden');
 
   const container = document.getElementById('vault-items-container');
@@ -394,10 +395,10 @@ function renderVaultView() {
       (item) => `
     <article class="bm-card">
       <div class="bm-card-top">
-        <b>${item.category === 'api-key' ? '🔑' : item.category === 'secret-note' ? '📄' : '👤'} ${escapeHtml(item.title)}</b>
+        <b>${item.category === 'api-key' ? '' : item.category === 'secret-note' ? '' : ''} ${escapeHtml(item.title)}</b>
         <div class="btn-group">
-          <button type="button" class="mb-touch-btn soft" data-copy-secret="${escapeHtml(item.id)}" style="min-height:36px;padding:4px 10px;font-size:12px;">📋 复制密文</button>
-          <button type="button" class="bm-mini-btn" data-del-vault="${escapeHtml(item.id)}">🗑️</button>
+          <button type="button" class="mb-touch-btn soft" data-copy-secret="${escapeHtml(item.id)}" style="min-height:36px;padding:4px 10px;font-size:12px;">复制密文</button>
+          <button type="button" class="bm-mini-btn" data-del-vault="${escapeHtml(item.id)}">删除</button>
         </div>
       </div>
       <div class="bm-card-brief">
@@ -420,15 +421,15 @@ function renderVaultView() {
       const timerEl = document.getElementById('vault-clipboard-timer');
       let remain = 30;
       clearInterval(clipboardClearTimer);
-      if (timerEl) timerEl.textContent = `✅ 已复制「${target.title}」密文，将在 ${remain} 秒后自动清空剪贴板`;
+      if (timerEl) timerEl.textContent = `已复制「${target.title}」密文，将在 ${remain} 秒后自动清空剪贴板`;
       clipboardClearTimer = setInterval(async () => {
         remain--;
         if (remain <= 0) {
           clearInterval(clipboardClearTimer);
           await navigator.clipboard?.writeText?.('').catch(() => {});
-          if (timerEl) timerEl.textContent = '🛡️ 剪贴板已自动安全清空';
+          if (timerEl) timerEl.textContent = '剪贴板已自动安全清空';
         } else if (timerEl) {
-          timerEl.textContent = `✅ 已复制「${target.title}」密文，将在 ${remain} 秒后自动清空剪贴板`;
+          timerEl.textContent = `已复制「${target.title}」密文，将在 ${remain} 秒后自动清空剪贴板`;
         }
       }, 1000);
     });
@@ -500,7 +501,7 @@ async function refreshSelfCheckMatrix() {
         <b>${escapeHtml(c.name)}</b>
         <span>${escapeHtml(c.spec)}</span>
       </div>
-      <span class="mb-pill">${c.ok ? '✅ 通过' : '⚠️ 受限'}</span>
+      <span class="mb-pill">${c.ok ? '通过' : '受限'}</span>
     </div>
   `
     )
@@ -532,7 +533,7 @@ function bindAppEvents() {
     const out = document.getElementById('home-qa-output');
     if (!out) return;
     out.classList.remove('hidden');
-    out.textContent = '⏳ 正在检索你的私有知识库…';
+    out.textContent = '正在搜索…';
     const res = await chrome.runtime.sendMessage({ type: 'KB_SEARCH_QA', query: q });
     if (res?.ok) {
       out.innerHTML = renderSafeMarkdown(res.answer);
@@ -563,7 +564,7 @@ function bindAppEvents() {
       if (res?.ok) {
         state.reading = res.reading;
         renderHomeView();
-        notifyToast(`全局阅读主题已切换为「${mode}」，所有已打开的匹配网页实时同步`);
+        notifyToast(`阅读模式已切换，已打开的网页同步生效`);
       }
     });
   });
@@ -578,7 +579,7 @@ function bindAppEvents() {
       state.dnr = res.config;
       renderHomeView();
       renderAiAndSettingsView();
-      notifyToast(state.dnr.enabled ? '已开启 DNR 省流净图动态规则' : '已关闭 DNR 省流净图规则');
+      notifyToast(state.dnr.enabled ? '已开启广告图片屏蔽' : '已关闭广告图片屏蔽');
     }
   });
 
@@ -608,7 +609,7 @@ function bindAppEvents() {
         state.bookmarks = dash.bookmarks;
         renderBookmarksView();
         renderHomeView();
-        notifyToast(`已智能归档《${res.item.title}》至「${res.item.group}」`);
+        notifyToast(`已收藏到「${res.item.group}」`);
       }
     }
   });
@@ -625,7 +626,7 @@ function bindAppEvents() {
     const sourceUrl = document.getElementById('note-input-url').value.trim();
     const content = document.getElementById('note-input-content').value.trim();
     if (!content) {
-      notifyToast('⚠️ 请先填写笔记正文内容');
+      notifyToast('请先填写笔记正文内容');
       return;
     }
     const res = await chrome.runtime.sendMessage({
@@ -642,7 +643,7 @@ function bindAppEvents() {
         state.notes = dash.notes;
         renderNotesView();
         renderHomeView();
-        notifyToast(`✅ 已保存笔记《${res.item.title}》`);
+        notifyToast(`已保存笔记《${res.item.title}》`);
       }
     }
   });
@@ -654,7 +655,7 @@ function bindAppEvents() {
       notifyToast('请先在编辑器中输入草稿文字');
       return;
     }
-    notifyToast('⏳ 正在由 AI 双核引擎结构化润色…');
+    notifyToast('正在整理…');
     const res = await chrome.runtime.sendMessage({
       type: 'AI_ANALYZE',
       taskMode: 'polish-note',
@@ -663,7 +664,7 @@ function bindAppEvents() {
     });
     if (res?.ok && ta) {
       ta.value = res.text;
-      notifyToast('✨ 已完成 Markdown 结构化润色与标签提炼');
+      notifyToast('已整理');
     }
   });
 
@@ -677,7 +678,7 @@ function bindAppEvents() {
     const pw = document.getElementById('vault-init-pw').value;
     const res = await chrome.runtime.sendMessage({ type: 'VAULT_INIT', password: pw });
     if (!res?.ok) {
-      notifyToast(`⚠️ ${res?.error || '初始化失败'}`);
+      notifyToast(`${res?.error || '初始化失败'}`);
       return;
     }
     state.vault = res.vault;
@@ -689,7 +690,7 @@ function bindAppEvents() {
     }
     renderVaultView();
     renderHomeView();
-    notifyToast('🔐 零知识保险箱已初始化并自动解锁');
+    notifyToast('保险箱已创建');
   });
 
   document.getElementById('vault-btn-copy-recovery')?.addEventListener('click', () => {
@@ -702,14 +703,14 @@ function bindAppEvents() {
     const pw = document.getElementById('vault-unlock-pw').value;
     const res = await chrome.runtime.sendMessage({ type: 'VAULT_UNLOCK', password: pw });
     if (!res?.ok) {
-      notifyToast(`⚠️ ${res?.error || '主密码错误'}`);
+      notifyToast(`${res?.error || '主密码错误'}`);
       return;
     }
     document.getElementById('vault-unlock-pw').value = '';
     state.vault = res.vault;
     renderVaultView();
     renderHomeView();
-    notifyToast('🔓 保险箱已解锁');
+    notifyToast('保险箱已解锁');
   });
 
   document.getElementById('vault-btn-reset')?.addEventListener('click', async () => {
@@ -721,13 +722,13 @@ function bindAppEvents() {
       newPassword
     });
     if (!res?.ok) {
-      notifyToast(`⚠️ ${res?.error || '恢复密钥重置失败'}`);
+      notifyToast(`${res?.error || '恢复密钥重置失败'}`);
       return;
     }
     state.vault = res.vault;
     renderVaultView();
     renderHomeView();
-    notifyToast('✅ 已通过恢复密钥重置主密码并解锁');
+    notifyToast('已通过恢复密钥重置主密码并解锁');
   });
 
   document.getElementById('vault-btn-lock')?.addEventListener('click', async () => {
@@ -736,7 +737,7 @@ function bindAppEvents() {
       state.vault = res.vault;
       renderVaultView();
       renderHomeView();
-      notifyToast('🔒 保险箱已安全锁定');
+      notifyToast('保险箱已锁定');
     }
   });
 
@@ -760,7 +761,7 @@ function bindAppEvents() {
       state.vault = res.vault;
       renderVaultView();
       renderHomeView();
-      notifyToast('🔐 凭据已使用 AES-256-GCM 加密存入本地');
+      notifyToast('已加密保存');
     }
   });
 
@@ -778,7 +779,7 @@ function bindAppEvents() {
     });
     if (res?.ok) {
       state.settings = res.settings;
-      notifyToast('✅ 已保存 Xiaomi MiMo / AI 网关配置');
+      notifyToast('已保存');
     }
   });
 
@@ -786,14 +787,14 @@ function bindAppEvents() {
     const out = document.getElementById('ai-test-output');
     if (!out) return;
     out.classList.remove('hidden');
-    out.textContent = '⏳ 正在测试双核 AI 推理引擎…';
+    out.textContent = '正在测试…';
     const res = await chrome.runtime.sendMessage({
       type: 'AI_ANALYZE',
       taskMode: 'summary',
       pageContext: {
-        title: '小米浏览器 Vibe Coding 大赛 · 谜盒·灵动知识舱',
+        title: '连接测试',
         url: 'https://vibe-coding.browser.miui.com/rules',
-        text: '谜盒·灵动知识舱支持网页触控灵动胶囊、长按划词 AI 精读、四档全局护眼阅读跨标签同步、DNR 净图过滤与 AES-256-GCM 零知识保险箱，预置 Xiaomi MiMo 大模型与本地零配置双核引擎。'
+        text: '谜盒是一个小米浏览器扩展。在手机上长按选中网页文字，可以存笔记、解释或翻译。它还提供四种阅读模式，所有标签页同步切换。'
       }
     });
     if (res?.ok) {
@@ -825,7 +826,7 @@ function bindAppEvents() {
     if (dRes?.ok) state.dnr = dRes.config;
 
     renderHomeView();
-    notifyToast('✅ 触控交互与 DNR 净网规则已更新');
+    notifyToast('已保存');
   });
 
   // 参赛自检与手机/Pad 双端导出
@@ -849,7 +850,7 @@ function bindAppEvents() {
       await handleExport('json');
     }
     await navigator.clipboard?.writeText?.(preview.value).catch(() => {});
-    notifyToast('📋 已复制完整导出文本到剪贴板（完美适配小米平板 Pad 端）');
+    notifyToast('已复制到剪贴板');
   });
 
   document.getElementById('contest-btn-reset-demo')?.addEventListener('click', async () => {
@@ -858,7 +859,7 @@ function bindAppEvents() {
       state.bookmarks = res.bookmarks;
       state.notes = res.notes;
       renderAll();
-      notifyToast('✨ 已恢复小米浏览器参赛精选演示数据');
+      notifyToast('已恢复示例数据');
     }
   });
 }
@@ -867,7 +868,7 @@ async function initApp() {
   installViewportObserver((vp) => {
     const detail = document.getElementById('app-vp-detail');
     if (detail) {
-      detail.textContent = `layout=${vp.layout} · width=${vp.pageWidth}px · short=${vp.screenShortSide}px`;
+      detail.textContent = `${vp.layout === 'wide' ? '宽屏' : '手机'} · ${vp.pageWidth}px`;
     }
   });
 

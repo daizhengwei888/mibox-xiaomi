@@ -1,4 +1,4 @@
-/* 谜盒·灵动知识舱 网页护眼阅读样式（严格遵循 SKILL.md 与 references/examples.md §1 白名单选择器规范，不使用全站 * 覆盖） */
+/* 谜盒·划词笔记 网页护眼阅读样式 */
 
 /* 1. 暖纸护眼模式（Warm Paper） */
 html[data-mb-reading-mode="warm"] body,

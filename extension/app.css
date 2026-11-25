@@ -1,4 +1,4 @@
-/* 谜盒·灵动知识舱 全屏工作台双端响应式布局（遵循 SKILL.md §0：compact < 600px 手机底部栏 / wide >= 600px Pad 侧边栏） */
+/* 谜盒·划词笔记 全屏工作台双端响应式布局 */
 
 .app-shell {
   min-height: 100vh;
@@ -112,7 +112,7 @@ html[data-mb-layout="wide"] .nav-btn {
 }
 
 .nav-lbl {
-  font-size: 11px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
