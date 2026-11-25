@@ -388,12 +388,19 @@
     });
   }
 
+  function formatCleanOutput(md) {
+    return String(md || '')
+      .replace(/^###\s+/gm, '')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/`([^`]+)`/g, '$1');
+  }
+
   function openDrawerWithOutput(text) {
     ensureShadowUi();
     updateCapsuleLabel();
     const backdrop = shadowRoot.getElementById('mb-backdrop');
     const out = shadowRoot.getElementById('mb-drawer-output');
-    if (text && out) out.textContent = text;
+    if (text && out) out.textContent = formatCleanOutput(text);
     if (backdrop) backdrop.classList.add('open');
   }
 
@@ -460,7 +467,7 @@
         },
         (res) => {
           if (res?.ok) {
-            out.textContent = res.text;
+            out.textContent = formatCleanOutput(res.text);
           } else {
             out.textContent = '提炼失败，请稍后重试。';
           }
@@ -474,7 +481,7 @@
       out.textContent = '⏳ 正在检索你的私有收藏与笔记库…';
       chrome.runtime.sendMessage({ type: 'KB_SEARCH_QA', query }, (res) => {
         if (res?.ok) {
-          out.textContent = res.answer;
+          out.textContent = formatCleanOutput(res.answer);
         }
       });
     };

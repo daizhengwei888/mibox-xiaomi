@@ -66,7 +66,7 @@ export function inferBookmarkIntelligence({ title = '', url = '', text = '', des
     .trim();
 
   const sentences = cleanText
-    .split(/(?<=[。！？.!?\n])/)
+    .split(/(?<=[。！？!?;；\n]|\.(?=\s|$))/)
     .map((s) => s.trim())
     .filter((s) => s.length >= 12 && s.length <= 140);
 
@@ -118,7 +118,7 @@ export function runOfflinePageAnalysis({ mode = 'summary', title = '', url = '',
   const intel = inferBookmarkIntelligence({ title, url, text: sourceText });
 
   const sentences = sourceText
-    .split(/(?<=[。！？.!?;；\n])/)
+    .split(/(?<=[。！？!?;；\n]|\.(?=\s|$))/)
     .map((s) => s.trim())
     .filter((s) => s.length >= 14 && s.length <= 180);
 
