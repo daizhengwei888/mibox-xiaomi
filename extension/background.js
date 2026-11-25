@@ -239,7 +239,7 @@ async function runXiaomiCapabilitySelfCheck() {
   ];
   return {
     ok: true,
-    version: chrome.runtime?.getManifest?.()?.version || '1.0.0',
+    version: chrome.runtime?.getManifest?.()?.version || '1.1.0',
     checks
   };
 }
