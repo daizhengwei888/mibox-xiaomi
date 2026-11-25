@@ -5,6 +5,7 @@
   "description": "用网页显影找出数字、日期和限制条件，也能用扫描动画在原位置复原网页首屏。支持划词笔记、翻译和护眼阅读。",
   "icons": {
     "16": "icons/16.png",
+    "32": "icons/32.png",
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
@@ -13,6 +14,7 @@
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/16.png",
+      "32": "icons/32.png",
       "48": "icons/48.png",
       "128": "icons/128.png"
     }

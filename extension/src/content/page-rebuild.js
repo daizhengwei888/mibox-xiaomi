@@ -132,7 +132,7 @@
       }
     }
     const ordinary = document.body.querySelectorAll(selector);
-    for (let i = 0; i < Math.min(ordinary.length, 700); i++) found.add(ordinary[i]);
+    for (let i = 0; i < Math.min(ordinary.length, 400); i++) found.add(ordinary[i]);
     return { found, gradients };
   }
 
@@ -162,6 +162,7 @@
   }
 
   function scan(vp) {
+    if (document.hidden) return null;
     const { found, gradients } = nearbyElements(vp);
     const outlines = [];
     const text = [];

@@ -140,7 +140,9 @@
       positions.push({ node, start, end: text.length });
     }
     const matches = [];
-    for (const match of text.matchAll(FILTERS[filter])) {
+    const re = FILTERS[filter];
+    re.lastIndex = 0;
+    for (const match of text.matchAll(re)) {
       const from = match.index;
       const to = from + match[0].length;
       const start = positions.find((item) => from < item.end);

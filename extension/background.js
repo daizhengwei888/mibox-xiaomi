@@ -16,7 +16,10 @@ import {
   upsertNote,
   deleteNote,
   getStorageMap,
-  setStorageMap
+  setStorageMap,
+  hasSessionStorage,
+  getSessionMap,
+  setSessionMap
 } from './src/shared/storage-repo.js';
 import {
   createVaultHeader,
@@ -121,11 +124,21 @@ async function applyDnrPurifierRules(dnrConfig) {
  * 保险箱会话状态读写
  */
 async function getActiveVaultMasterKey() {
-  const map = await getStorageMap([STORAGE_KEYS.VAULT_SESSION]);
-  const sess = map[STORAGE_KEYS.VAULT_SESSION];
+  let sess = null;
+  if (hasSessionStorage()) {
+    const sm = await getSessionMap([STORAGE_KEYS.VAULT_SESSION]);
+    sess = sm[STORAGE_KEYS.VAULT_SESSION];
+  }
+  if (!sess?.masterKeyBase64) {
+    const map = await getStorageMap([STORAGE_KEYS.VAULT_SESSION]);
+    sess = map[STORAGE_KEYS.VAULT_SESSION];
+    if (sess?.masterKeyBase64 && hasSessionStorage()) {
+      await setStorageMap({ [STORAGE_KEYS.VAULT_SESSION]: null });
+    }
+  }
   if (!sess || !sess.masterKeyBase64) return null;
   if (sess.expiresAt && Date.now() > sess.expiresAt) {
-    await setStorageMap({ [STORAGE_KEYS.VAULT_SESSION]: null });
+    await lockVaultSession();
     return null;
   }
   return sess.masterKeyBase64;
@@ -134,12 +147,13 @@ async function getActiveVaultMasterKey() {
 async function setActiveVaultSession(masterKeyBase64, autoLockMinutes = 15) {
   const mins = Math.max(1, Number(autoLockMinutes) || 15);
   const expiresAt = Date.now() + mins * 60 * 1000;
-  await setStorageMap({
-    [STORAGE_KEYS.VAULT_SESSION]: {
-      masterKeyBase64,
-      expiresAt
-    }
-  });
+  const payload = { masterKeyBase64, expiresAt };
+  if (hasSessionStorage()) {
+    await setSessionMap({ [STORAGE_KEYS.VAULT_SESSION]: payload });
+    await setStorageMap({ [STORAGE_KEYS.VAULT_SESSION]: null });
+  } else {
+    await setStorageMap({ [STORAGE_KEYS.VAULT_SESSION]: payload });
+  }
   if (chrome.alarms?.create) {
     await chrome.alarms.clear(VAULT_ALARM_NAME).catch(() => {});
     chrome.alarms.create(VAULT_ALARM_NAME, { delayInMinutes: mins });
@@ -147,6 +161,7 @@ async function setActiveVaultSession(masterKeyBase64, autoLockMinutes = 15) {
 }
 
 async function lockVaultSession() {
+  if (hasSessionStorage()) await setSessionMap({ [STORAGE_KEYS.VAULT_SESSION]: null });
   await setStorageMap({ [STORAGE_KEYS.VAULT_SESSION]: null });
   if (chrome.alarms?.clear) {
     await chrome.alarms.clear(VAULT_ALARM_NAME).catch(() => {});

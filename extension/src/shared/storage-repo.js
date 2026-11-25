@@ -148,6 +148,19 @@ export async function setStorageMap(obj) {
   }
 }
 
+export function hasSessionStorage() {
+  return typeof chrome !== 'undefined' && Boolean(chrome.storage?.session?.get && chrome.storage?.session?.set);
+}
+
+export async function getSessionMap(keys) {
+  if (hasSessionStorage()) return chrome.storage.session.get(keys);
+  return {};
+}
+
+export async function setSessionMap(obj) {
+  if (hasSessionStorage()) await chrome.storage.session.set(obj);
+}
+
 export async function ensureSeedInitialized() {
   const data = await getStorageMap([
     STORAGE_KEYS.SETTINGS,

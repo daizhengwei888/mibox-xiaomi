@@ -4,6 +4,7 @@ import {
   installViewportObserver,
   applySkinToDocument,
   escapeHtml,
+  safeUrl,
   extractDomain,
   formatTimeAgo
 } from './src/shared/viewport.js';
@@ -170,7 +171,7 @@ function bindPanelEvents() {
     await refreshActiveTabContext();
     const ta = document.getElementById('pn-note-body');
     if (!ta) return;
-    const quote = `\n> 来源：[${currentTab.title}](${currentTab.url})\n> 时间：${new Date().toLocaleString('zh-CN')}\n`;
+    const quote = `\n> 来源：[${currentTab.title}](${safeUrl(currentTab.url)})\n> 时间：${new Date().toLocaleString('zh-CN')}\n`;
     ta.value = `${ta.value}${quote}`;
   });
 

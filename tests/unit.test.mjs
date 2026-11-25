@@ -111,3 +111,41 @@ test('3. 视口测量与 Pad 端无 downloads API 时的自动降级导出', asy
   assert.equal(exported.downloaded, false);
   assert.match(exported.text, /谜盒·划词笔记 导出归档/);
 });
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { safeUrl } from '../extension/src/shared/viewport.js';
+
+test('4. safeUrl 只放行 http/https 与扩展内相对链接', () => {
+  assert.equal(safeUrl('https://example.com/a'), 'https://example.com/a');
+  assert.equal(safeUrl('http://example.com'), 'http://example.com');
+  assert.equal(safeUrl('javascript:alert(1)'), '#');
+  assert.equal(safeUrl('data:text/html,<script>1</script>'), '#');
+  assert.equal(safeUrl(''), '#');
+  assert.equal(safeUrl('panel.html'), 'panel.html');
+});
+
+test('5. manifest 引用的文件都存在且版本与打包名一致', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'extension/manifest.json'), 'utf8'));
+  assert.equal(manifest.version, '1.3.0');
+  const refs = [
+    manifest.action.default_popup,
+    manifest.side_panel.default_path,
+    manifest.options_page,
+    manifest.background.service_worker,
+    ...Object.values(manifest.icons),
+    ...Object.values(manifest.action.default_icon),
+    ...manifest.content_scripts.flatMap((c) => [...(c.js || []), ...(c.css || [])])
+  ];
+  for (const r of refs) assert.ok(fs.existsSync(path.join(root, 'extension', r)), `missing ${r}`);
+  assert.equal([...manifest.name].length >= 2 && [...manifest.name].length <= 16, true);
+});
+
+test('6. 全局正则重复调用结果一致（lastIndex 回归）', () => {
+  const re = /\d+/g;
+  const run = () => { re.lastIndex = 0; return [...'a1 b22 c333'.matchAll(re)].map((m) => m[0]); };
+  assert.deepEqual(run(), ['1', '22', '333']);
+  assert.deepEqual(run(), ['1', '22', '333']);
+});

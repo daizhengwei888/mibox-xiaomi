@@ -87,6 +87,18 @@ export function formatTimeAgo(ts) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+export function safeUrl(url) {
+  const raw = String(url ?? '').trim();
+  if (!raw) return '#';
+  if (/^(?:\.\/)?[\w./-]+$/.test(raw) && !raw.includes(':')) return raw;
+  try {
+    const u = new URL(raw, 'https://example.invalid/');
+    return (u.protocol === 'http:' || u.protocol === 'https:') ? raw : '#';
+  } catch {
+    return '#';
+  }
+}
+
 export function extractDomain(url) {
   try {
     const u = new URL(url);

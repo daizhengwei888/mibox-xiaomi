@@ -6,6 +6,7 @@ import {
   installViewportObserver,
   applySkinToDocument,
   escapeHtml,
+  safeUrl,
   formatTimeAgo,
   extractDomain
 } from './src/shared/viewport.js';
@@ -168,7 +169,7 @@ function renderHomeView() {
         (b) => `
       <div class="bm-card">
         <div class="bm-card-top">
-          <a class="bm-card-title" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
+          <a class="bm-card-title" href="${escapeHtml(safeUrl(b.url))}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
           <span class="mb-pill">${escapeHtml(b.group || '精选')}</span>
         </div>
         <div class="bm-card-brief">${escapeHtml(b.brief || '')}</div>
@@ -246,7 +247,7 @@ function renderBookmarksView() {
       (b) => `
     <article class="bm-card">
       <div class="bm-card-top">
-        <a class="bm-card-title" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
+        <a class="bm-card-title" href="${escapeHtml(safeUrl(b.url))}" target="_blank" rel="noopener">${escapeHtml(b.title)}</a>
         <div class="btn-group">
           <button type="button" class="bm-mini-btn" data-star="${escapeHtml(b.id)}" title="切换星标">${b.starred ? '★' : '☆'}</button>
           <button type="button" class="bm-mini-btn" data-del-bm="${escapeHtml(b.id)}" title="删除收藏">删除</button>

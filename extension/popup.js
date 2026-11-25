@@ -4,7 +4,8 @@ import {
   SKINS,
   applySkinToDocument,
   extractDomain,
-  escapeHtml
+  escapeHtml,
+  safeUrl
 } from './src/shared/viewport.js';
 
 if (matchMedia('(pointer: coarse)').matches && window.screen.width > 1) {
@@ -358,7 +359,7 @@ function bindPopupEvents() {
       box.innerHTML = res.matches
         .map(
           (m) => `
-          <div class="pop-result-item" data-url="${escapeHtml(m.url || '')}">
+          <div class="pop-result-item" data-url="${escapeHtml(safeUrl(m.url || ''))}">
             <b>${m.type === 'note' ? '' : ''} ${escapeHtml(m.title)}</b>
             <span>${escapeHtml(m.content.slice(0, 78))}…</span>
           </div>
